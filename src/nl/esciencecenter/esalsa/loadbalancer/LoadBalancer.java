@@ -164,7 +164,7 @@ public class LoadBalancer {
 		
 		if (splitMethod.equalsIgnoreCase("simple")) { 
 			split = new SimpleSplit(set, subsets);
-		} else if (splitMethod.equalsIgnoreCase("roughlyrectangular")) {
+		} else if (splitMethod.equalsIgnoreCase("roughlyrect")) {
 			split = new RoughlyRectangularSplit(set, subsets);
 		} else if (splitMethod.equalsIgnoreCase("search")) {
 			split = new SearchSplit(set, subsets, neighbours);
