@@ -23,8 +23,21 @@ import java.io.IOException;
 
 import nl.esciencecenter.esalsa.util.Distribution;
 
+/**
+ * TextToDistribution is an application that converts a POP distribution represented in ASCI text to the binary format used in 
+ * POP itself.   
+ *  
+ * @author Jason Maassen <J.Maassen@esciencecenter.nl>
+ * @version 1.0
+ * @since 1.0
+ */
 public class TextToDistribution {
 
+	/** 
+	 * Main entry point into application. 
+	 * 
+	 * @param args the command line arguments provided by the user. 
+	 */
 	public static void main(String [] args) { 
 		
 		if (args.length != 2) { 			
@@ -37,10 +50,7 @@ public class TextToDistribution {
 		try { 
 			r = new BufferedReader(new FileReader(new File(args[0])));
 		} catch (IOException e) {  
-			System.err.println("Failed to open input file: " + args[0]);
-			System.err.println(e.getMessage());
-			e.printStackTrace(System.err);
-			System.exit(1);
+			Utils.fatal("Failed to open input file: " + args[0] + "\n", e);
 		}
 		
 		Distribution d = null;
@@ -72,15 +82,14 @@ public class TextToDistribution {
 			d = new Distribution(topographyWidth, topographyHeight, blockWidth, blockHeight, 
 					clusters, nodesPerCluster, coresPerNode, minBlocksPerCore, maxBlocksPerCore, totalBlocks, distribution);
 
+		} catch (IOException e) {
+			Utils.fatal("Failed to read input file: " + args[0] + "\n", e);					
+		}
+		
+		try { 
 			d.write(args[1]);
-			
-		} catch (IOException e) { 		
-			System.err.println("Failed to read input file: " + args[0]);
-			System.err.println(e.getMessage());
-			e.printStackTrace(System.err);
-			System.exit(1);			
+		} catch (IOException e) {
+			Utils.fatal("Failed to write output file: " + args[1] + "\n", e);					
 		}
 	}
-	
-	
 }

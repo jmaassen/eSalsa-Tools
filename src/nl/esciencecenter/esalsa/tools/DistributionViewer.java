@@ -59,7 +59,7 @@ public class DistributionViewer {
 	private static final Logger logger = LoggerFactory.getLogger(DistributionViewer.class);
 
 	/** The line color used for clusters */
-	private static final Color LINE_COLOR_CLUSTER = new Color(225,255,0,200);
+	private static final Color LINE_COLOR_CLUSTER = new Color(255,255,0,200);
 
 	/** The color used for cluster ocean halos */
 	private static final Color HALO_COLOR_CLUSTER = new Color(128, 64,  0, 96);
@@ -68,10 +68,10 @@ public class DistributionViewer {
 	private static final Color LAND_COLOR_CLUSTER = new Color(0, 64,  128, 32);
 
 	/** The line width used for clusters */
-	private static final float LINE_WIDTH_CLUSTER = 13f;
+	private static final float LINE_WIDTH_CLUSTER = 15f;
 
 	/** The line color used for nodes */
-	private static final Color LINE_COLOR_NODE = new Color(255,128,0,160);
+	private static final Color LINE_COLOR_NODE = new Color(200,128,0,160);
 
 	/** The color used for node ocean halos */
 	private static final Color HALO_COLOR_NODE = new Color(160, 80,  0, 160);
@@ -525,14 +525,14 @@ public class DistributionViewer {
 	public static void main(String [] args) { 
 
 		if (args.length < 2) { 
-			System.out.println("Usage: DistributionViewer [topography_file] [distribution_file]\n" + 
+			System.out.println("Usage: DistributionViewer topography_file distribution_file\n" + 
 					"\n" + 
 					"Read a topography file and work distribution file and show a graphical interface that allows " + 
 					"the user to interactively explore the work distribution.\n" + 
 					"\n" + 
-					"  [topography_file]   a topography file that contains the index of the deepest ocean level at " + 
+					"  topography_file     a topography file that contains the index of the deepest ocean level at " + 
 					"each gridpoint.\n" + 
-					"  [distribution_file] a work distribution file.\n"); 		
+					"  distribution_file   a work distribution file.\n"); 		
 			System.exit(1);
 		}
 
@@ -543,14 +543,13 @@ public class DistributionViewer {
 			Distribution d = new Distribution(distributionFile);
 			Topography t = new Topography(d.topographyWidth, d.topographyHeight, topographyFile);
 			Grid g = new Grid(t, d.blockWidth, d.blockHeight);
-			Neighbours n = new Neighbours(g, d.blockWidth, d.blockHeight, Neighbours.CYCLIC, Neighbours.TRIPOLE);
-			
+			Neighbours n = new Neighbours(g, d.blockWidth, d.blockHeight, Neighbours.CYCLIC, Neighbours.TRIPOLE);			
 			DistributionViewer dv = new DistributionViewer(d, t, g, n, true);
+			
 			dv.drawAll();
 			
 		} catch (Exception e) {
-			System.err.println("Failed to run DistributionViewer " + e);
-			e.printStackTrace(System.err);
+			Utils.fatal("Failed to run DistributionViewer ", e);
 		}
 	}
 }

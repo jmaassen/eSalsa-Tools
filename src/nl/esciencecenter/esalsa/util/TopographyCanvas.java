@@ -284,11 +284,7 @@ public class TopographyCanvas extends Canvas {
 		update(graphics);
 	}
 	
-	@Override
-	public void update(Graphics graphics) { 
-		
-		int w = getWidth();
-		int h = getHeight();
+	private BufferedImage getCurrentImage(int w, int h) { 
 		
 		// Create buffered image of topography
 		BufferedImage img = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
@@ -296,6 +292,29 @@ public class TopographyCanvas extends Canvas {
 		
 		g2.drawImage(topo, 0, 0, w, h, 0, 0, topography.width, topography.height, null);
 		
+		for (BufferedImage tmp : layers.values()) {
+			g2.drawImage(tmp, 0, 0, w, h, 0, 0, topography.width, topography.height, null);					
+		}
+		
+		return img;
+	}
+	
+	@Override
+	public void update(Graphics graphics) { 
+		
+		int w = getWidth();
+		int h = getHeight();
+
+		BufferedImage img = getCurrentImage(w, h);
+		
+/*		
+		// Create buffered image of topography
+		BufferedImage img = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
+		Graphics2D g2 = (Graphics2D) img.getGraphics();
+		
+		g2.drawImage(topo, 0, 0, w, h, 0, 0, topography.width, topography.height, null);
+		
+		/*		
 		LinkedList<BufferedImage> reverse = new LinkedList<BufferedImage>();
 		
 		for (BufferedImage tmp : layers.values()) {
@@ -306,7 +325,11 @@ public class TopographyCanvas extends Canvas {
 			g2.drawImage(tmp, 0, 0, w, h, 0, 0, topography.width, topography.height, null);					
 		}
 		
-		g2 = (Graphics2D) graphics;
+		for (BufferedImage tmp : layers.values()) {
+			g2.drawImage(tmp, 0, 0, w, h, 0, 0, topography.width, topography.height, null);					
+		}
+*/		
+		Graphics2D g2 = (Graphics2D) graphics;
 		g2.drawImage(img, 0, 0, w, h, 0, 0, w, h, null);
 	}
 
@@ -318,15 +341,20 @@ public class TopographyCanvas extends Canvas {
 	 */
 	public void save(String file) throws IOException { 
 		
-		int w = topography.width;
-		int h = topography.height;
+//		int w = topography.width;
+		//int h = topography.height;
 		
 		// Create buffered image of topography
+		
+		// BufferedImage img = getCurrentImage(topography.width, topography.height);
+		
+		/*
 		BufferedImage img = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
 		Graphics2D g2 = (Graphics2D) img.getGraphics();
 		
 		g2.drawImage(topo, 0, 0, w, h, 0, 0, topography.width, topography.height, null);
-	
+	*/
+		/*
 		LinkedList<BufferedImage> reverse = new LinkedList<BufferedImage>();
 		
 		for (BufferedImage tmp : layers.values()) {
@@ -339,8 +367,9 @@ public class TopographyCanvas extends Canvas {
 		for (BufferedImage tmp : reverse) {
 			g2.drawImage(tmp, 0, 0, w, h, 0, 0, topography.width, topography.height, null);					
 		}
+		*/
 		
-		ImageIO.write(img, "png", new File(file));
+		ImageIO.write(getCurrentImage(topography.width, topography.height), "png", new File(file));
 		
 		System.out.println("Done writing " + file);
 	}

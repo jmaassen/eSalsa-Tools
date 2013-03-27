@@ -200,6 +200,16 @@ public class Distribution {
 	}
 	
 	/** 
+	 * Returns the number of the core that owns the block at the given index. 
+	 * 
+	 * @param index the index of the block. 
+	 * @return the owner of the block.
+	 */
+	public int getOwner(int index) { 
+		return distribution[index];
+	}
+	
+	/** 
 	 * Writes a block distribution to disk. 
 	 * 
 	 * @param filename the filename of the file to write the distribution to. 

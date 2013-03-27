@@ -24,7 +24,7 @@ import nl.esciencecenter.esalsa.util.Neighbours;
 import nl.esciencecenter.esalsa.util.Topography;
 
 /**
- * This is the main entry point into the eSalsa POP LoadBalancer. 
+ * This is the main entry point into the eSalsa POP LoadBalancin application.
  * 
  * @author Jason Maassen <J.Maassen@esciencecenter.nl>
  * @version 1.0
@@ -72,81 +72,18 @@ public class LoadBalancing {
 	/** Name of the split methods to use */
 	private static String splitMethod = "roughlyrect";
 	
-	/** 
-	 * Check if enough parameters are available for the current option. 
-	 * If not, an error is printed and the application is terminated.  
-	 * 
-	 * @param option the current command line option. 
-	 * @param parameters the number of parameters required.
-	 * @param index the current index in the command line parameter list.  
-	 * @param length the length of the command line parameter list.
-	 */
-	private static void checkOptions(String option, int parameters, int index, int length) { 
-		if (index+parameters >= length) { 
-			System.err.println("Missing arguments for option " + option + " (required parameters " + parameters + ")");
-			System.exit(1);
-		}
-	}
-	
-	/** 
-	 * Print an error and terminate the application.  
-	 * 
-	 * @param error the error to print.
-	 */
-	private static void fatal(String error) { 
-		System.err.println(error);
-		System.exit(1);	 
-	}
-	
-	/** 
-	 * Print an error and terminate the application.  
-	 * 
-	 * @param e Exception that describes the fatal fault.
-	 */
-	private static void fatal(Exception e) { 
-		System.err.println(e.getLocalizedMessage());
-		e.printStackTrace(System.err);
-		System.exit(1);	 
-	}
-	
-	/** 
-	 * Parse a string containing an integer and ensure its value is at least {@link minValue}.
-	 * If the string cannot be parsed, or the integer is smaller than minValue, an error is printed 
-	 * and the application is terminated. 
-	 * 
-	 * @param option the current command line option. 
-	 * @param toParse the string to parse
-	 * @param minValue the required minimal value for the integer. 
-	 * @return the int value in the option string. 
-	 */
-	private static int parseInt(String option, String toParse, int minValue) { 
-		
-		int result = -1;
-		
-		try { 
-			result = Integer.parseInt(toParse);
-		} catch (Exception e) {
-			fatal("Failed to read argument for option " + option + " (parameters " + toParse + " is not a number)");
-		}
-		
-		if (result < minValue) { 
-			fatal("Argument for option " + option + " must have a value of at least " + minValue + " (got " + result + ")");
-		}
-		
-		return result;		
-	}
-	
 	/**
 	 * Print the usage on the console. 
 	 */
 	private static void usage() { 
 		System.out.println(
-				"Usage: nl.esciencecenter.esalsa.tools.LoadBalancing topography_file [OPTION]*\n" + 
+				"Usage: LoadBalancing topography_file [OPTION]*\n" + 
 				"\n" + 
 				"Reads a POP topography file and determines a block distribution suitable for a number nodes each" +
 				" containing a number of cores (and optionally divided into a number of clusters).\n" +
 				"\n" + 
 				"Mandatory arguments:\n" + 
+				"   topography_file            the topography file that contains the index of the deepest ocean levels.\n" + 
 				"   --grid WIDTH HEIGHT        dimensions of the topography file grid (WIDTHxHEIGHT).\n" + 
 				"   --blocksize WIDTH HEIGHT   dimensions of the blocks to use (WIDTHxHEIGHT).\n" + 
 				"   --nodes NODES              number of nodes for which the distribution must be calculated.\n" + 
@@ -159,7 +96,7 @@ public class LoadBalancing {
 				"   --statistics LAYER         print statistics on the resulting distribution on layer LAYER. Valid" +
 				" value for LAYER are CORES, NODES, CLUSTERS, ALL.\n" +
 				"   --method METHOD            method used to distribute the blocks. Valid values for METHOD are" + 
-				" SIMPLE, ROUGHLYRECT, and SEARCH. Default is ROUGHLYRECT." + 				
+				" SIMPLE, ROUGHLYRECT, and SEARCH. Default is ROUGHLYRECT.\n" + 				
 				"   --showgui                  show a graphical interface that allows the user to explore the distribution.\n" + 		
 				"   --help                     show this help.");
 		
@@ -229,7 +166,7 @@ public class LoadBalancing {
 			}
 			
 		} catch (Exception e) {
-			fatal(e);
+			Utils.fatal(e);
 		}
 	}
 	
@@ -256,43 +193,43 @@ public class LoadBalancing {
 		while (index < args.length) { 
 
 			if (args[index].equals("--grid")) { 
-				checkOptions("--grid", 2, index, args.length);
-				topographyWidth = parseInt("--grid", args[index+1], 1);
-				topographyHeight = parseInt("--grid", args[index+2], 1);
+				Utils.checkOptions("--grid", 2, index, args.length);
+				topographyWidth = Utils.parseInt("--grid", args[index+1], 1);
+				topographyHeight = Utils.parseInt("--grid", args[index+2], 1);
 				index += 3;
 				topographySet = true;
 				
 			} else if (args[index].equals("--blocksize")) { 
-				checkOptions("--blocksize", 2, index, args.length);
-				blockWidth = parseInt("--blocksize", args[index+1], 1);
-				blockHeight = parseInt("--blocksize", args[index+2], 1);
+				Utils.checkOptions("--blocksize", 2, index, args.length);
+				blockWidth = Utils.parseInt("--blocksize", args[index+1], 1);
+				blockHeight = Utils.parseInt("--blocksize", args[index+2], 1);
 				index += 3;
 				blockSet = true;
 				 
 			} else if (args[index].equals("--clusters")) { 
-				checkOptions("--clusters", 1, index, args.length);
-				clusters = parseInt("--clusters", args[index+1], 1);
+				Utils.checkOptions("--clusters", 1, index, args.length);
+				clusters = Utils.parseInt("--clusters", args[index+1], 1);
 				index += 2;
 
 			} else if (args[index].equals("--nodes")) { 
-				checkOptions("--nodes", 1, index, args.length);
-				nodesPerCluster = parseInt("--nodes", args[index+1], 1);
+				Utils.checkOptions("--nodes", 1, index, args.length);
+				nodesPerCluster = Utils.parseInt("--nodes", args[index+1], 1);
 				index += 2;
 				nodesSet = true;
 				
 			} else if (args[index].equals("--cores")) { 
-				checkOptions("--cores", 1, index, args.length);
-				coresPerNode = parseInt("--cores", args[index+1], 1);
+				Utils.checkOptions("--cores", 1, index, args.length);
+				coresPerNode = Utils.parseInt("--cores", args[index+1], 1);
 				index += 2;
 				coresSet = true;
 				
 			} else if (args[index].equals("--output")) { 
-				checkOptions("--output", 1, index, args.length);
+				Utils.checkOptions("--output", 1, index, args.length);
 				outputDistribution = args[index+1];
 				index += 2;
 
 			} else if (args[index].equals("--image")) { 
-				checkOptions("--image", 1, index, args.length);
+				Utils.checkOptions("--image", 1, index, args.length);
 				outputImage = args[index+1];
 				index += 2;
 
@@ -304,50 +241,50 @@ public class LoadBalancing {
 				usage();
 				
 			} else if (args[index].equals("--statistics")) { 
-				checkOptions("--statistics", 1, index, args.length);
+				Utils.checkOptions("--statistics", 1, index, args.length);
 				statistics = args[index+1];
 				index += 2;
 				
 			} else if (args[index].equals("--method")) { 
-				checkOptions("--method", 1, index, args.length);
+				Utils.checkOptions("--method", 1, index, args.length);
 				splitMethod = args[index+1];
 				index += 2;
 				
 			} else { 
-				fatal("Unknown option: " + args[index]);
+				Utils.fatal("Unknown option: " + args[index]);
 			}		
 		}
 
 		if (!topographySet) { 
-			fatal("Please specify topography dimension using \"--grid WIDTH HEIGHT\"");
+			Utils.fatal("Please specify topography dimension using \"--grid WIDTH HEIGHT\"");
 		}
 		
 		if (!blockSet) { 
-			fatal("Please specify block dimension using \"--blocksize WIDTH HEIGHT\"");
+			Utils.fatal("Please specify block dimension using \"--blocksize WIDTH HEIGHT\"");
 		}
 		
 		if (!nodesSet) { 
-			fatal("Please specify node count using \"--nodes NODES\"");
+			Utils.fatal("Please specify node count using \"--nodes NODES\"");
 		}
 		
 		if (!coresSet) { 
-			fatal("Please specify core per node using \"--cores CORES\"");
+			Utils.fatal("Please specify core per node using \"--cores CORES\"");
 		}
 		
 		if (blockWidth > topographyWidth) { 
-			fatal("Block width cannot be larger that grid width");
+			Utils.fatal("Block width cannot be larger that grid width");
 		}
 		
 		if (topographyWidth % blockWidth != 0) { 
-			fatal("Block width must divide grid width equally!");
+			Utils.fatal("Block width must divide grid width equally!");
 		}
 		
 		if (blockHeight > topographyHeight) { 
-			fatal("Block height cannot be larger that grid height");
+			Utils.fatal("Block height cannot be larger that grid height");
 		}
 		
 		if (topographyHeight % blockHeight != 0) { 
-			fatal("Block height must divide grid height equally!");
+			Utils.fatal("Block height must divide grid height equally!");
 		}
 		
 		if (!showGUI && outputDistribution == null && outputImage == null && statistics == null) { 
