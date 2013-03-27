@@ -58,7 +58,7 @@
         <delete failonerror="false" file="${zip}" />
 
         <zip destfile="${zip}">
-            <zipfileset dir="." prefix="${prefix}" includes="external/**,lib/**,*.properties,*.example,notices/**,README.txt,INSTALL.txt,LICENSE.txt,javadoc/**" />
+            <zipfileset dir="." prefix="${prefix}" includes="lib/**,*.properties,*.example,notices/**,README,INSTALL,LICENSE,HISTORY,docs/**" />
             <zipfileset dir="." prefix="${prefix}" filemode="755" includes="scripts/**" />
         </zip>
     </target>
@@ -67,7 +67,7 @@
         <delete failonerror="false" file="${src-zip}" />
 
         <zip destfile="${src-zip}">
-            <zipfileset dir="." prefix="${prefix}" includes="src/**,external/**,lib/**,*.properties,*.example,notices/**,README.txt,INSTALL.txt,LICENSE.txt,javadoc/**,build.xml" />
+            <zipfileset dir="." prefix="${prefix}" includes="src/**,lib/**,*.properties,*.example,notices/**,README,INSTALL,LICENSE,HISTORY,docs/**,build.xml" />
             <zipfileset dir="." prefix="${prefix}" filemode="755" includes="scripts/**" />
         </zip>
     </target>
