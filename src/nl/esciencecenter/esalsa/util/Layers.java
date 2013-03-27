@@ -22,7 +22,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /** 
- * Layers provides a simple storage class for a collection of layers. Layers can be retrieved using name. 
+ * Layers provides a simple storage class for a collection of layers. A layer can be retrieved using its name. 
  *  
  * @author Jason Maassen <J.Maassen@esciencecenter.nl>
  * @version 1.0

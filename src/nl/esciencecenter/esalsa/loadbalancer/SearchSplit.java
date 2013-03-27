@@ -28,7 +28,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * A SearchSplit is an extension of a RoughlyRectangularSplit that generates all valid roughly rectangular grid of sets and tests 
- * each of them to see which solutions offers the minimal amount of communication between nodes. 
+ * each of them to see which solution offers the minimal amount of communication between nodes. 
  * 
  * @author Jason Maassen <J.Maassen@esciencecenter.nl>
  * @version 1.0

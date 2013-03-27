@@ -17,7 +17,7 @@
 package nl.esciencecenter.esalsa.util;
 
 /**
- * Represents a line between two coordinates. 
+ * Line represents a line between two coordinates. 
  * 
  * @author Jason Maassen <J.Maassen@esciencecenter.nl>
  * @version 1.0

@@ -25,7 +25,6 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.LinkedHashMap;
-import java.util.LinkedList;
 import java.util.Set;
 
 import javax.imageio.ImageIO;
@@ -35,7 +34,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * A TopographyCanvas is an extension of {@link java.awt.Canvas} is capable of showing a POP topography. 
+ * TopographyCanvas is an extension of {@link java.awt.Canvas} is capable of showing a {@link Topography}. 
  * <p>
  * In addition, one or more named layers can be created on top of the topography that can be used to draw lines, fill blocks, or
  * display text on top of the topography.   

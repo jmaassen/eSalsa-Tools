@@ -15,21 +15,21 @@
  */
 
 /**
- * This package contains the eSalsa LoadBalancer application which is used to generate a block distribution for the 
- * Parallel Ocean Program (POP). 
+ * This package contains various classes related to eSalsa LoadBalancer.
+ * <p>
+ * The <code>LoadBalancer</code> is the main entry point into this library. It is used to generate a block distribution for the 
+ * Parallel Ocean Program (POP).   
  * <p>
  * This block distribution is based on the ocean bottom topography, the desired block size, and the desired number of clusters, 
- * nodes per cluster, and cores per node. The LoadBalancer then attempts to generate a block distribution that:
+ * nodes per cluster, and cores per node.
+ * <p> 
+ * The LoadBalancer uses one or more of the subclasses of <code>Split</code> to generate a block distribution that:
  * <p>
  * <ul>
  * <li>distributes the work equally over the available cores.</li> 
  * <li>attempts to minimize the amount of communication required between cluster, nodes, and cores.</li>
  * </ul>  
  * <p>
- * This distribution can them be stored in a file which can be read by POP. If desired, the distribution can also be displayed on 
- * screen or saved in a PNG image. In addition, statistics on work distribution and communication for individual elements  
- * (blocks, cores, nodes, and clusters) can be shown graphically or printed on the console.    
- * 
  */
 package nl.esciencecenter.esalsa.loadbalancer;
 

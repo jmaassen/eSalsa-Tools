@@ -99,7 +99,8 @@ public class Utils {
 	}
 	
 	/** 
-	 * Parse a string containing an integer and ensure its value is at least {@code minValue} and at most {@code maxValue}.
+	 * Parse a string containing an integer and ensure its value is at least <code>minValue</code> and at most 
+	 * <code>maxValue</code>.
 	 * If the string cannot be parsed, or the integer is smaller than minValue or larger than maxValue, an error is printed 
 	 * and the application is terminated. 
 	 * 

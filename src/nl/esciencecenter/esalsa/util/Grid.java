@@ -25,7 +25,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * The Grid class represents an rectangular grid of Blocks.
+ * Grid represents an rectangular grid of Blocks.
  *    
  * @author Jason Maassen <J.Maassen@esciencecenter.nl>
  * @version 1.0

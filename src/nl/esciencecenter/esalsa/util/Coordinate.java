@@ -17,7 +17,7 @@
 package nl.esciencecenter.esalsa.util;
 
 /**
- * A coordinate representing a location in (x,y) coordinate space, specified in integer precision.
+ * Coordinate represents a location in (x,y) coordinate space, specified in integer precision.
  *
  * @author Jason Maassen <J.Maassen@esciencecenter.nl>
  * @version 1.0

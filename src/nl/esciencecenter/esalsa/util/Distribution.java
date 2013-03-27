@@ -28,7 +28,7 @@ import java.util.Collection;
 
 
 /**
- * Distribution contains all necessary information about a POP block distribution. 
+ * Distribution represents a POP block distribution. 
  * 
  * @author Jason Maassen <J.Maassen@esciencecenter.nl>
  * @version 1.0 

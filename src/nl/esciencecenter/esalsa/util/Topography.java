@@ -25,7 +25,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * A Topography represents a bottom topography definition used as input for POP. 
+ * Topography represents an ocean bottom topography definition used as in POP. 
  * 
  * A bottom topography contains the index (> 0) of the deepest ocean level for each grid point. A value of 0 at any position 
  * indicates a land point. 

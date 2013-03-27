@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package nl.esciencecenter.esalsa.util;
 
 import java.util.ArrayList;
@@ -25,7 +24,7 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 /**
- * This class represents a set of Blocks. 
+ * Set represents a set of Blocks. 
  * 
  * @author Jason Maassen <J.Maassen@esciencecenter.nl>
  * @version 1.0

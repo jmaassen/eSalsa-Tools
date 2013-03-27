@@ -33,7 +33,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * LoadBalancer is used to generate a block distribution for the Parallel Ocean Program (POP). This block distribution is based
- * on the ocean topography, the desired block size, and the desired number of clusters, nodes per cluster, and cores per node.   
+ * on the ocean topography, the desired block size, and the desired number of clusters, nodes per cluster, and cores per node. 
  * 
  * @author Jason Maassen <J.Maassen@esciencecenter.nl>
  * @version 1.0

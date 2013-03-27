@@ -22,6 +22,15 @@ import nl.esciencecenter.esalsa.util.Layers;
 import nl.esciencecenter.esalsa.util.Neighbours;
 import nl.esciencecenter.esalsa.util.Set;
 
+/**
+ * Statistics is a utility class capable of printing statistics for a given block distribution.
+ * 
+ * @author Jason Maassen <J.Maassen@esciencecenter.nl>
+ * @version 1.0
+ * @since 1.0
+ * @see Layers
+ * @see Neighbours
+ */
 public class Statistics {
 
 	private final Layers layers;

@@ -22,7 +22,7 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 /** 
- * A layer represents a subdivision of a grid into one or more sets of blocks.
+ * Layer represents a subdivision of a grid into one or more sets of blocks.
  * 
  * @author Jason Maassen <J.Maassen@esciencecenter.nl>
  * @version 1.0

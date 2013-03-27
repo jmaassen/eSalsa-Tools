@@ -18,6 +18,19 @@ package nl.esciencecenter.esalsa.util;
 
 import java.util.ArrayList;
 
+/**
+ * PrimeFactorization is a utility class for prime factorization.
+ *  
+ * Using <code>factor</code>, a value can be split into its prime factors using a simple trial division algorithm. 
+ * 
+ * This implementation assumes the largest possible prime factor used is 997. 
+ * 
+ * @author Jason Maassen <J.Maassen@esciencecenter.nl>
+ * @version 1.0
+ * @since 1.0
+ * @see Block
+ *
+ */
 public class PrimeFactorization {
 
 	/** All primes smaller than 1000. */

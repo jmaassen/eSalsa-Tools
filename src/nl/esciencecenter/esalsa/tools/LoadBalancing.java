@@ -24,7 +24,10 @@ import nl.esciencecenter.esalsa.util.Neighbours;
 import nl.esciencecenter.esalsa.util.Topography;
 
 /**
- * This is the main entry point into the eSalsa POP LoadBalancin application.
+ * LoadBalancing is an application that generates a block distribution for POP. 
+ * 
+ * The block distribution is generated based on an ocean bottom topography, the desired block size, and the 
+ * desired number of clusters, nodes per cluster, and cores per node, and a desired split heuristic.
  * 
  * @author Jason Maassen <J.Maassen@esciencecenter.nl>
  * @version 1.0

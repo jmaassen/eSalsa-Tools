@@ -17,7 +17,7 @@
 package nl.esciencecenter.esalsa.util;
 
 /**
- * A Block represents a block in a POP work distribution. 
+ * Block represents a block in a POP work distribution. 
  * 
  * It consists of an immutable <code>Coordinate</code>, and an <code>int</code> mark that can be used to label the block with an 
  * arbitrary integer value.   

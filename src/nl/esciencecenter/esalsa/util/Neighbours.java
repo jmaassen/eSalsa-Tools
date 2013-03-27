@@ -17,7 +17,7 @@
 package nl.esciencecenter.esalsa.util;
 
 /**
- * This class is a Java port of the neighborhood functions used in the Fortran version of POP. 
+ * Neighbours is a Java port of the neighborhood functions used in the Fortran version of POP. 
  * 
  * It can be used to determine the neighbors for a given block and the communication costs for these neighbors. Like the original
  * Fortran versions, the neighbor and communication functions support CLOSED, CYCLIC and TRIPOLE wrapping of coordinates.       

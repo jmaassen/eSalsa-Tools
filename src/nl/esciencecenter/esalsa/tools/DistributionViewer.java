@@ -41,8 +41,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * A DistributionViewer is used to draw the outlines of sets of blocks on a topography. The results can be inspected in a 
- * TopographyCanvas or saved to an image file.    
+ * DistributionViewer is an application used to interactively inspect a block distribution.
  * 
  * @author Jason Maassen <J.Maassen@esciencecenter.nl>
  * @version 1.0
