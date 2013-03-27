@@ -13,6 +13,6 @@ fi
 exec java \
     -classpath "$ESALSA_HOME/lib/"'*' \
     -Dlog4j.configuration=file:"$IPL_HOME"/log4j.properties \
-    nl.esciencecenter.esalsa.loadbalancer.Main \
+    nl.esciencecenter.esalsa.tools.LoadBalancing \
     "$@"
 

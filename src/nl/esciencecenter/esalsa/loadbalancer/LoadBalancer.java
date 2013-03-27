@@ -25,14 +25,14 @@ import nl.esciencecenter.esalsa.util.Layer;
 import nl.esciencecenter.esalsa.util.Layers;
 import nl.esciencecenter.esalsa.util.Neighbours;
 import nl.esciencecenter.esalsa.util.Set;
-import nl.esciencecenter.esalsa.util.Topology;
+import nl.esciencecenter.esalsa.util.Topography;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
  * LoadBalancer is used to generate a block distribution for the Parallel Ocean Program (POP). This block distribution is based
- * on the ocean topology, the desired block size, and the desired number of clusters, nodes per cluster, and cores per node.   
+ * on the ocean topography, the desired block size, and the desired number of clusters, nodes per cluster, and cores per node.   
  * 
  * @author Jason Maassen <J.Maassen@esciencecenter.nl>
  * @version 1.0
@@ -53,8 +53,8 @@ public class LoadBalancer {
 	/** The number of cores to use. */  
 	private final int cores;
 	
-	/** The topology on which the grid is defined */
-	private final Topology topology; 
+	/** The topography on which the grid is defined */
+	private final Topography topography; 
 	
 	/** The function object used the determine block neighbours. */  
 	private final Neighbours neighbours;
@@ -78,7 +78,7 @@ public class LoadBalancer {
 	private final String splitMethod; 
 	
 	/**
-	 * Create a LoadBalancer for the provided topology. 
+	 * Create a LoadBalancer for the provided topography. 
 	 * 
 	 * @param layers the store for the layers
 	 * @param neighbours the function object used to determine the block neighbors. 
@@ -90,12 +90,12 @@ public class LoadBalancer {
 	 * @param cores the desired number of cores.
 	 * @throws Exception if the LoadBalancer could not be initialized. 
 	 */
-	public LoadBalancer(Layers layers, Neighbours neighbours, Topology topology, Grid grid, int blockWidth, int blockHeight, 
+	public LoadBalancer(Layers layers, Neighbours neighbours, Topography topography, Grid grid, int blockWidth, int blockHeight, 
 			int clusters, int nodes, int cores, String splitMethod) throws Exception {
 
 		this.layers = layers;
 		this.neighbours = neighbours;
-		this.topology = topology;
+		this.topography = topography;
 		this.grid = grid;
 		
 		this.clusters = clusters;
@@ -368,7 +368,7 @@ public class LoadBalancer {
 	}
 	
 	/** 
-	 * Distribute the available blocks over the cores, taking the topology, desired block size, number of cores per node and 
+	 * Distribute the available blocks over the cores, taking the topography, desired block size, number of cores per node and 
 	 * nodes per cluster into account.
 	 *
 	 * @return the generated distribution.
@@ -422,7 +422,7 @@ public class LoadBalancer {
 			}
 		}
 
-		return new Distribution(topology.width, topology.height, 
+		return new Distribution(topography.width, topography.height, 
 				grid.blockWidth, grid.blockHeight, 
 				clusters, nodes, cores, 
 				minBlocksPerCore, maxBlocksPerCore, 

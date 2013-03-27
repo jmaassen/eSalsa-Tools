@@ -18,7 +18,7 @@
  * This package contains the eSalsa LoadBalancer application which is used to generate a block distribution for the 
  * Parallel Ocean Program (POP). 
  * <p>
- * This block distribution is based on the ocean topology, the desired block size, and the desired number of clusters, 
+ * This block distribution is based on the ocean bottom topography, the desired block size, and the desired number of clusters, 
  * nodes per cluster, and cores per node. The LoadBalancer then attempts to generate a block distribution that:
  * <p>
  * <ul>

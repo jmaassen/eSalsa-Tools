@@ -44,10 +44,10 @@ public class Grid implements Iterable<Block> {
 	/** The height of the grid. */
 	public final int height;
 
-	/** The width of a block in topology points. */
+	/** The width of a block in topography points. */
 	public final int blockWidth;
 	
-	/** The height of a block in topology points. */
+	/** The height of a block in topography points. */
 	public final int blockHeight;
 	
 	/** An array of length width*height to store blocks in this grid. */ 
@@ -77,27 +77,27 @@ public class Grid implements Iterable<Block> {
 	}
 	
 	/** 
-	 * Create grid by subdividing a Topology into blocks of size blockWidth x blockHeight points.
+	 * Create grid by subdividing a Topography into blocks of size blockWidth x blockHeight points.
 	 *  
 	 * Only Blocks containing at least one ocean point will be stored. As a result, after creation, 
 	 * some locations in the grid may not contain a block.      
 	 * 
-	 * @param topo the Topology to divide. 
-	 * @param blockWidth the width of a block in topology points.  
-	 * @param blockHeight the height of a block in topology points.
-	 * @throws Exception if the block size does not divide the topology equally.
-	 * @see Topology
+	 * @param topo the Topography to divide. 
+	 * @param blockWidth the width of a block in topography points.  
+	 * @param blockHeight the height of a block in topography points.
+	 * @throws Exception if the block size does not divide the topography equally.
+	 * @see Topography
 	 * @see Block 
 	 */	
-	public Grid(Topology topo, int blockWidth, int blockHeight) throws Exception {
+	public Grid(Topography topo, int blockWidth, int blockHeight) throws Exception {
 		
 		if (topo.width % blockWidth != 0) {
-			throw new Exception("Cannot subdivide topology: block width " + blockWidth + 
+			throw new Exception("Cannot subdivide topography: block width " + blockWidth + 
 					" is not a divider of width " + topo.width);
 		}
 		
 		if (topo.height % blockHeight != 0) {		
-			throw new Exception("Cannot subdivide topology: block height " + blockHeight + 
+			throw new Exception("Cannot subdivide topography: block height " + blockHeight + 
 					" is not a divider of height " + topo.height);
 		}
 
@@ -108,7 +108,7 @@ public class Grid implements Iterable<Block> {
 		this.blockHeight = blockHeight;
 		
 		if (logger.isDebugEnabled()) { 
-			logger.debug("Creating new grid from topology " + width + "x" + height);
+			logger.debug("Creating new grid from topography " + width + "x" + height);
 		}
 		
 		blocks = new Block[width*height];
@@ -125,7 +125,7 @@ public class Grid implements Iterable<Block> {
 		}
 
 		if (logger.isDebugEnabled()) { 
-			logger.debug("Created new grid from topology with " + getCount() + " active elements.");
+			logger.debug("Created new grid from topography with " + getCount() + " active elements.");
 		}
 	}		
 	
@@ -169,7 +169,7 @@ public class Grid implements Iterable<Block> {
 	public void put(Block b) { 
 		
 		if (!inRange(b.coordinate)) { 
-			throw new IllegalArgumentException("Coordiate out of bounds! " + b.coordinate);
+			throw new IllegalArgumentException("Coordinate out of bounds! " + b.coordinate);
 		}
 		
 		if (blocks[b.coordinate.y*width + b.coordinate.x] == null) { 

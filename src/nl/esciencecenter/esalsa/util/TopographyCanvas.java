@@ -35,70 +35,70 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * A TopologyCanvas is an extension of {@link java.awt.Canvas} is capable of showing a POP topology. 
+ * A TopographyCanvas is an extension of {@link java.awt.Canvas} is capable of showing a POP topography. 
  * <p>
- * In addition, one or more named layers can be created on top of the topology that can be used to draw lines, fill blocks, or
- * display text on top of the topology.   
+ * In addition, one or more named layers can be created on top of the topography that can be used to draw lines, fill blocks, or
+ * display text on top of the topography.   
  * 
  * @author Jason Maassen <J.Maassen@esciencecenter.nl>
  * @version 1.0
  * @since 1.0
  * 
  */
-public class TopologyCanvas extends Canvas {
+public class TopographyCanvas extends Canvas {
 	
 	/** Generated */
 	private static final long serialVersionUID = -8649482969047330657L;
 
 	/** A logger used for debugging */
-	private static final Logger logger = LoggerFactory.getLogger(TopologyCanvas.class);
+	private static final Logger logger = LoggerFactory.getLogger(TopographyCanvas.class);
 
-	/** A BufferedImage containing a image showing the topology. */ 
+	/** A BufferedImage containing a image showing the topography. */ 
 	private final BufferedImage topo;
 	
 	/** A store for the various layers. */ 
 	private final LinkedHashMap<String, BufferedImage> layers = new LinkedHashMap<String, BufferedImage>();
 	
-	/** The topology we are displaying */
-	public final Topology topology;
+	/** The topography we are displaying */
+	public final Topography topography;
 
-	/** The grid overlay on the topology. */ 
+	/** The grid overlay on the topography. */ 
 	public final Grid grid;
 	
 	/**
-	 * Create a TopologyCanvas for a specified topology and grid. 
+	 * Create a TopographyCanvas for a specified topography and grid. 
 	 * 
-	 * @param topology the Topology to use. 
+	 * @param topography the Topography to use. 
 	 * @param grid the grid to use. 
-	 * @see Topology
+	 * @see Topography
 	 * @see Grid
 	 */
-	public TopologyCanvas(Topology topology, Grid grid) { 
+	public TopographyCanvas(Topography topography, Grid grid) { 
 		
-		this.topology = topology;
+		this.topography = topography;
 		this.grid = grid;
 		
-		int range = topology.max - topology.min + 1;
+		int range = topography.max - topography.min + 1;
 		
 		if (logger.isDebugEnabled()) { 
-			logger.debug("Color range: " + topology.min + " ... " + topology.max + " (" + range + ")");
+			logger.debug("Color range: " + topography.min + " ... " + topography.max + " (" + range + ")");
 		}
 			
 		int [] colors = new int[range];
 		colors[0] = 0xFFFFFFFF;
 		
 		for (int i=1;i<range;i++) {
-			int tmp = 255-(int)((255.0/topology.max)*i);			
+			int tmp = 255-(int)((255.0/topography.max)*i);			
 			colors[i] = (0xFF000000 | tmp);
 		}
 	
-		// Create the topology image
-		topo = new BufferedImage(topology.width, topology.height, BufferedImage.TYPE_INT_ARGB);
+		// Create the topography image
+		topo = new BufferedImage(topography.width, topography.height, BufferedImage.TYPE_INT_ARGB);
 		
-		for (int x=0;x<topology.width;x++) { 
-			for (int y=0;y<topology.height;y++) { 
-				// Flip image, as the topology is stored upside down!
-				topo.setRGB(x, topology.height-y-1, colors[topology.get(x, y)]);
+		for (int x=0;x<topography.width;x++) { 
+			for (int y=0;y<topography.height;y++) { 
+				// Flip image, as the topography is stored upside down!
+				topo.setRGB(x, topography.height-y-1, colors[topography.get(x, y)]);
 			}				
 		}
 	}
@@ -162,14 +162,14 @@ public class TopologyCanvas extends Canvas {
 	public void draw(String layer, Line line, Color color, float lineWidth) throws Exception {
 		
 		// Calculate the scale of this line. 
-		int sx = topology.width / grid.width;
-		int sy = topology.height / grid.height;
+		int sx = topography.width / grid.width;
+		int sy = topography.height / grid.height;
 		
 		Graphics2D g = (Graphics2D) getLayer(layer).getGraphics();
 		
 		g.setColor(color);
 		g.setStroke(new BasicStroke(lineWidth));		
-		g.drawLine(line.start.x*sx, (topology.height-line.start.y*sy), line.end.x*sx, (topology.height-line.end.y*sy));	
+		g.drawLine(line.start.x*sx, (topography.height-line.start.y*sy), line.end.x*sx, (topography.height-line.end.y*sy));	
 	}
 
 	/** 
@@ -182,7 +182,7 @@ public class TopologyCanvas extends Canvas {
 	 * @throws Exception if the layer does not exist. 
 	 */
 	public void draw(String layer, int x, int y, Color color) throws Exception {
-		getLayer(layer).setRGB(x, topology.height-y-1, color.getRGB());
+		getLayer(layer).setRGB(x, topography.height-y-1, color.getRGB());
 	}
 	
 	/**
@@ -216,11 +216,11 @@ public class TopologyCanvas extends Canvas {
 			throw new Exception("Layer " + layer + " + already exists!");
 		}
 		
-		BufferedImage tmp = new BufferedImage(topology.width, topology.height, BufferedImage.TYPE_INT_ARGB);
+		BufferedImage tmp = new BufferedImage(topography.width, topography.height, BufferedImage.TYPE_INT_ARGB);
 
-		for (int x=0;x<topology.width;x++) { 
-			for (int y=0;y<topology.height;y++) { 
-				tmp.setRGB(x, topology.height-y-1, 0x00000000);
+		for (int x=0;x<topography.width;x++) { 
+			for (int y=0;y<topography.height;y++) { 
+				tmp.setRGB(x, topography.height-y-1, 0x00000000);
 			}				
 		}
 
@@ -247,9 +247,9 @@ public class TopologyCanvas extends Canvas {
 		
 		BufferedImage tmp = getLayer(layer);
 		
-		for (int x=0;x<topology.width;x++) { 
-			for (int y=0;y<topology.height;y++) { 
-				tmp.setRGB(x, topology.height-y-1, 0x00000000);
+		for (int x=0;x<topography.width;x++) { 
+			for (int y=0;y<topography.height;y++) { 
+				tmp.setRGB(x, topography.height-y-1, 0x00000000);
 			}				
 		}		
 	}
@@ -278,95 +278,6 @@ public class TopologyCanvas extends Canvas {
 			}
 		}
 	}		
-
-/*	
-	public void drawNumber(String layer, int x, int y, int gridWidth, int gridHeight, Color color, int number) throws Exception { 
-		
-		BufferedImage tmp = getLayer(layer);
-		
-		// Calculate the scale of this line. 
-		int sx = topology.width / gridWidth;
-		int sy = topology.height / gridHeight;
-
-		drawBlockNumber(tmp, x*sx, y*sy, sx, sy, color, "" + number);		
-	}
-	
-	public void drawNumberAt(String layer, int x, int y, int w, int h, Color color, int number) throws Exception { 
-		BufferedImage tmp = getLayer(layer);
-		drawBlockNumber(tmp, x, y, w, h, color, "" + number);		
-	}
-	
-	private void drawBlockNumber(BufferedImage img, int x, int y, int w, int h, Color color, String txt) {
-		
-		Font font = new Font("Monospaced", Font.PLAIN, 32);
-
-		Graphics2D g = (Graphics2D) img.getGraphics();
-
-		FontMetrics metrics = g.getFontMetrics(font);
-		//int hgt = metrics.getHeight();
-
-		int hgt = metrics.getAscent(); // + metrics.getDescent();
-		
-//		System.out.println("Ascent = " + metrics.getAscent()  + " Descent = " + metrics.getDescent());
-		
-//		String max = "" + maxCores;
-		
-//		if (max.length() % 2 == 0) { 
-//			max = max + " ";
-//		}
-		
-		int adv = metrics.stringWidth(txt);
-		Dimension size = new Dimension(adv+2, hgt+2);
-
-		// Dimension now contains the max size that we will need to draw a block number;
-		if (size.width >= w || size.height >= h) { 
-			// We need to scale the text down.
-			
-//System.out.println("Scale down!");			
-			
-		} else { 
-			// The text should fit OK. 
-			
-			int dx = w - size.width;
-			int dy = h - size.height;
-
-			x += dx/2;
-			y += dy/2;
-			
-			//g.setFont(font);
-			//g.setColor(color);
-			//g.drawString("" + number ensureLength("" + number, max.length()), x, topology.height-y);
-			
-			//Graphics2D g2 = (Graphics2D) g.create(x+dx/2, topology.height-(y+dy/2), size.width, size.height);
-			//g2.setFont(font);
-			//g2.setColor(color);
-			
-			//g2.drawString(max, 0, 0);
-		
-			String s = txt;
-			g.setFont(font);
-			
-			g.setColor(new Color(128, 128, 128, 128));
-			
-			for (int wx = -2 ; wx <= 2 ; wx++) { 
-				for (int wy = -2 ; wy <= 2 ; wy++) { 
-					g.drawString(s, x+wx, topology.height-y+wy);
-				}	
-			}
-			
-			g.setColor(new Color(64, 64, 64, 192));
-			
-			for (int wx = -1 ; wx <= 1 ; wx++) { 
-				for (int wy = -1 ; wy <= 1 ; wy++) { 
-					g.drawString(s, x+wx, topology.height-y+wy);
-				}	
-			}
-			
-			g.setColor(color);			
-			g.drawString(s, x, topology.height-y);
-		}
-	}
-*/
 	
 	@Override
 	public void paint(Graphics graphics) {
@@ -379,11 +290,11 @@ public class TopologyCanvas extends Canvas {
 		int w = getWidth();
 		int h = getHeight();
 		
-		// Create buffered image of topology
+		// Create buffered image of topography
 		BufferedImage img = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
 		Graphics2D g2 = (Graphics2D) img.getGraphics();
 		
-		g2.drawImage(topo, 0, 0, w, h, 0, 0, topology.width, topology.height, null);
+		g2.drawImage(topo, 0, 0, w, h, 0, 0, topography.width, topography.height, null);
 		
 		LinkedList<BufferedImage> reverse = new LinkedList<BufferedImage>();
 		
@@ -392,7 +303,7 @@ public class TopologyCanvas extends Canvas {
 		}
 		
 		for (BufferedImage tmp : reverse) {
-			g2.drawImage(tmp, 0, 0, w, h, 0, 0, topology.width, topology.height, null);					
+			g2.drawImage(tmp, 0, 0, w, h, 0, 0, topography.width, topography.height, null);					
 		}
 		
 		g2 = (Graphics2D) graphics;
@@ -407,14 +318,14 @@ public class TopologyCanvas extends Canvas {
 	 */
 	public void save(String file) throws IOException { 
 		
-		int w = topology.width;
-		int h = topology.height;
+		int w = topography.width;
+		int h = topography.height;
 		
-		// Create buffered image of topology
+		// Create buffered image of topography
 		BufferedImage img = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
 		Graphics2D g2 = (Graphics2D) img.getGraphics();
 		
-		g2.drawImage(topo, 0, 0, w, h, 0, 0, topology.width, topology.height, null);
+		g2.drawImage(topo, 0, 0, w, h, 0, 0, topography.width, topography.height, null);
 	
 		LinkedList<BufferedImage> reverse = new LinkedList<BufferedImage>();
 		
@@ -426,7 +337,7 @@ public class TopologyCanvas extends Canvas {
 		reverse.addFirst(bi);
 		
 		for (BufferedImage tmp : reverse) {
-			g2.drawImage(tmp, 0, 0, w, h, 0, 0, topology.width, topology.height, null);					
+			g2.drawImage(tmp, 0, 0, w, h, 0, 0, topography.width, topography.height, null);					
 		}
 		
 		ImageIO.write(img, "png", new File(file));

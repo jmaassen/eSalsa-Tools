@@ -23,10 +23,10 @@ import javax.swing.JFrame;
 import nl.esciencecenter.esalsa.util.Coordinate;
 import nl.esciencecenter.esalsa.util.Grid;
 import nl.esciencecenter.esalsa.util.Line;
-import nl.esciencecenter.esalsa.util.Topology;
-import nl.esciencecenter.esalsa.util.TopologyCanvas;
+import nl.esciencecenter.esalsa.util.Topography;
+import nl.esciencecenter.esalsa.util.TopographyCanvas;
 
-public class TopologyViewer {
+public class TopographyViewer {
 
 	/** 
 	 * Main entry point into application. 
@@ -36,11 +36,11 @@ public class TopologyViewer {
 	public static void main(String [] args) { 
 
 		if (args.length < 5) { 
-			System.out.println("Usage: TopologyViewer topologyFile width height blockWidth blockHeight");
+			System.out.println("Usage: TopographyViewer topographyFile topographyWidth topographyWeight blockWidth blockHeight");
 			System.exit(1);
 		}
 
-		String topologyFile = args[0];
+		String topographyFile = args[0];
 		int width = Integer.parseInt(args[1]);
 		int height = Integer.parseInt(args[2]);
 
@@ -50,16 +50,16 @@ public class TopologyViewer {
 		String output = args[5];
 		
 		try { 			
-			Topology t = new Topology(width, height, topologyFile);
+			Topography t = new Topography(width, height, topographyFile);
 			
 			Grid g = new Grid(t, blockWidth, blockHeight);
-			TopologyCanvas tc = new TopologyCanvas(t, g);
+			TopographyCanvas tc = new TopographyCanvas(t, g);
 			
 			tc.addLayer("BLOCKS");
 			tc.addLayer("LINES");
 			
 			
-			JFrame frame = new JFrame("Topology");
+			JFrame frame = new JFrame("Topograpy");
 			frame.setSize(1000, 667);
 			frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 			frame.getContentPane().add(tc);

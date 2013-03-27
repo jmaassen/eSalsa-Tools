@@ -37,16 +37,16 @@ import java.util.Collection;
  */
 public class Distribution {
 
-	/** The width of the topology for which this distribution was generated. */ 
-	public final int topologyWidth;
+	/** The width of the topography for which this distribution was generated. */ 
+	public final int topographyWidth;
 	
-	/** The height of the topology for which this distribution was generated. */
-	public final int topologyHeight;
+	/** The height of the topography for which this distribution was generated. */
+	public final int topographyHeight;
 	
 	/** The width of the blocks for which this distribution was generated. */
 	public final int blockWidth;
 	
-	/** The height of the topology for which this distribution was generated. */
+	/** The height of the topography for which this distribution was generated. */
 	public final int blockHeight;
 	
 	/** The number of clusters for which this distribution was generated. */
@@ -73,8 +73,8 @@ public class Distribution {
 	/** 
 	 * Create a new distribution.
 	 * 
-	 * @param topologyWidth the width of the topology used for the distribution.  
-	 * @param topologyHeight the height of the topology used for the distribution.
+	 * @param topographyWidth the width of the topography used for the distribution.  
+	 * @param topographyHeight the height of the topography used for the distribution.
 	 * @param blockWidth the width of the blocks used for the distribution.
 	 * @param blockHeight the height of the blocks use for the distribution.
 	 * @param clusters the number of clusters used for the distribution.
@@ -85,14 +85,14 @@ public class Distribution {
 	 * @param totalBlocks the total number of blocks in the distribution.
 	 * @param distribution the distribution to store.
 	 */
-	public Distribution(int topologyWidth, int topologyHeight, 
+	public Distribution(int topographyWidth, int topographyHeight, 
 			int blockWidth, int blockHeight, 
 			int clusters, int nodesPerCluster, int coresPerNode, 
 			int minBlocksPerCore, int maxBlocksPerCore,
 			int totalBlocks, int[] distribution) {
 
-		this.topologyWidth = topologyWidth;
-		this.topologyHeight = topologyHeight;
+		this.topographyWidth = topographyWidth;
+		this.topographyHeight = topographyHeight;
 		this.blockWidth = blockWidth;
 		this.blockHeight = blockHeight;
 		this.clusters = clusters;
@@ -119,11 +119,11 @@ public class Distribution {
 		try { 
 			in = new DataInputStream(new BufferedInputStream(new FileInputStream(filename)));
 
-			topologyWidth = in.readInt();
-			topologyHeight = in.readInt();
+			topographyWidth = in.readInt();
+			topographyHeight = in.readInt();
 			
-			if (topologyWidth <= 0 || topologyHeight <= 0) { 
-				throw new Exception("Illegal topology dimensions " + topologyWidth + "x" + topologyHeight);
+			if (topographyWidth <= 0 || topographyHeight <= 0) { 
+				throw new Exception("Illegal topography dimensions " + topographyWidth + "x" + topographyHeight);
 			}
 			
 			blockWidth = in.readInt();
@@ -133,8 +133,8 @@ public class Distribution {
 				throw new Exception("Illegal block dimensions " + blockWidth + "x" + blockHeight);
 			}
 
-			if (topologyWidth % blockWidth != 0 || topologyHeight % blockHeight != 0) { 
-				throw new Exception("Blocks do not perfectly fit topology (" + topologyWidth + "x" + topologyHeight + " " 
+			if (topographyWidth % blockWidth != 0 || topographyHeight % blockHeight != 0) { 
+				throw new Exception("Blocks do not perfectly fit topography (" + topographyWidth + "x" + topographyHeight + " " 
 						+ blockWidth + "x" + blockHeight +")");
 			}
 			
@@ -174,10 +174,10 @@ public class Distribution {
 			
 			totalBlocks = in.readInt();
 
-			int expectedBlocks = (topologyWidth / blockWidth) * (topologyHeight / blockHeight);
+			int expectedBlocks = (topographyWidth / blockWidth) * (topographyHeight / blockHeight);
 			
 			if (totalBlocks != expectedBlocks) { 
-				throw new Exception("totalblock is inconsistent with topology and blocksize! " + totalBlocks + " != " 
+				throw new Exception("totalblock is inconsistent with topography and blocksize! " + totalBlocks + " != " 
 						+ expectedBlocks);
 			}
 			
@@ -212,8 +212,8 @@ public class Distribution {
 		try { 
 			out = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(filename)));
 
-			out.writeInt(topologyWidth);
-			out.writeInt(topologyHeight);
+			out.writeInt(topographyWidth);
+			out.writeInt(topographyHeight);
 			
 			out.writeInt(blockWidth);
 			out.writeInt(blockHeight);
@@ -265,7 +265,7 @@ public class Distribution {
 	public Layers toLayers() { 
 
 		// Start by computing some constants. 
-		int blocksPerRow = topologyWidth / blockWidth;		
+		int blocksPerRow = topographyWidth / blockWidth;		
 		int totalNodes = clusters * nodesPerCluster;
 		int totalCores = totalNodes * coresPerNode;
 

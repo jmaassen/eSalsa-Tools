@@ -21,7 +21,7 @@ import nl.esciencecenter.esalsa.util.Distribution;
 import nl.esciencecenter.esalsa.util.Grid;
 import nl.esciencecenter.esalsa.util.Layers;
 import nl.esciencecenter.esalsa.util.Neighbours;
-import nl.esciencecenter.esalsa.util.Topology;
+import nl.esciencecenter.esalsa.util.Topography;
 
 /**
  * This is the main entry point into the eSalsa POP LoadBalancer. 
@@ -33,11 +33,11 @@ import nl.esciencecenter.esalsa.util.Topology;
  */
 public class LoadBalancing {
 
-	/** The topologyWidth as set by user */
-	private static int topologyWidth = -1;
+	/** The topographyWidth as set by user */
+	private static int topographyWidth = -1;
 	
-	/** The topologyHeight as set by user */
-	private static int topologyHeight = -1;
+	/** The topographyHeight as set by user */
+	private static int topographyHeight = -1;
 	
 	/** The blockWidth as set by user */
 	private static int blockWidth = -1;
@@ -60,8 +60,8 @@ public class LoadBalancing {
 	/** Statistics to print */
 	private static String statistics = null;
 	
-	/** File name of topology input file to load */ 
-	private static String topologyFile = null; 
+	/** File name of topography input file to load */ 
+	private static String topographyFile = null; 
 	
 	/** File name of output distribution file to write */
 	private static String outputDistribution = null; 
@@ -141,13 +141,13 @@ public class LoadBalancing {
 	 */
 	private static void usage() { 
 		System.out.println(
-				"Usage: nl.esciencecenter.esalsa.tools.LoadBalancing topology_file [OPTION]*\n" + 
+				"Usage: nl.esciencecenter.esalsa.tools.LoadBalancing topography_file [OPTION]*\n" + 
 				"\n" + 
-				"Reads a POP topology file and determines a block distribution suitable for a number nodes each" +
+				"Reads a POP topography file and determines a block distribution suitable for a number nodes each" +
 				" containing a number of cores (and optionally divided into a number of clusters).\n" +
 				"\n" + 
 				"Mandatory arguments:\n" + 
-				"   --grid WIDTH HEIGHT        dimensions of the topology file grid (WIDTHxHEIGHT).\n" + 
+				"   --grid WIDTH HEIGHT        dimensions of the topography file grid (WIDTHxHEIGHT).\n" + 
 				"   --blocksize WIDTH HEIGHT   dimensions of the blocks to use (WIDTHxHEIGHT).\n" + 
 				"   --nodes NODES              number of nodes for which the distribution must be calculated.\n" + 
 				"   --cores CORES              number of cores in each node.\n" +
@@ -167,26 +167,26 @@ public class LoadBalancing {
 	}
 	
 	/** 
-	 * Create  a LoadBalancer for the given topology and core configuration, run it, and save the desired output.   
+	 * Create  a LoadBalancer for the given topography and core configuration, run it, and save the desired output.   
 	 */	
 	private static void run() { 
 			
 		try { 
-			Topology topology = new Topology(topologyWidth, topologyHeight, topologyFile);
-			Grid grid = new Grid(topology, blockWidth, blockHeight);
+			Topography topography = new Topography(topographyWidth, topographyHeight, topographyFile);
+			Grid grid = new Grid(topography, blockWidth, blockHeight);
 			
 			Neighbours neighbours = new Neighbours(grid, blockWidth, blockHeight, Neighbours.CYCLIC, Neighbours.TRIPOLE);
 			
 			Layers layers = new Layers();
 			
-			LoadBalancer lb = new LoadBalancer(layers, neighbours, topology, grid, blockWidth, blockHeight, 
+			LoadBalancer lb = new LoadBalancer(layers, neighbours, topography, grid, blockWidth, blockHeight, 
 					clusters, nodesPerCluster, coresPerNode, splitMethod);
 			
 			Distribution distribution = lb.split();
 			
 			if (showGUI || outputImage != null) {
 
-				DistributionViewer sv = new DistributionViewer(distribution, topology, grid, neighbours, showGUI);					
+				DistributionViewer sv = new DistributionViewer(distribution, topography, grid, neighbours, showGUI);					
 				sv.drawBlocks();
 					
 				if (clusters > 1) { 
@@ -240,7 +240,7 @@ public class LoadBalancing {
 	 */
 	public static void main(String [] args) { 
 
-		boolean topologySet = false;
+		boolean topographySet = false;
 		boolean blockSet = false;
 		boolean nodesSet = false;
 		boolean coresSet = false;
@@ -249,7 +249,7 @@ public class LoadBalancing {
 			usage();
 		}
 
-		topologyFile = args[0];
+		topographyFile = args[0];
 		
 		int index = 1;
 		
@@ -257,10 +257,10 @@ public class LoadBalancing {
 
 			if (args[index].equals("--grid")) { 
 				checkOptions("--grid", 2, index, args.length);
-				topologyWidth = parseInt("--grid", args[index+1], 1);
-				topologyHeight = parseInt("--grid", args[index+2], 1);
+				topographyWidth = parseInt("--grid", args[index+1], 1);
+				topographyHeight = parseInt("--grid", args[index+2], 1);
 				index += 3;
-				topologySet = true;
+				topographySet = true;
 				
 			} else if (args[index].equals("--blocksize")) { 
 				checkOptions("--blocksize", 2, index, args.length);
@@ -318,8 +318,8 @@ public class LoadBalancing {
 			}		
 		}
 
-		if (!topologySet) { 
-			fatal("Please specify topology dimension using \"--grid WIDTH HEIGHT\"");
+		if (!topographySet) { 
+			fatal("Please specify topography dimension using \"--grid WIDTH HEIGHT\"");
 		}
 		
 		if (!blockSet) { 
@@ -334,19 +334,19 @@ public class LoadBalancing {
 			fatal("Please specify core per node using \"--cores CORES\"");
 		}
 		
-		if (blockWidth > topologyWidth) { 
+		if (blockWidth > topographyWidth) { 
 			fatal("Block width cannot be larger that grid width");
 		}
 		
-		if (topologyWidth % blockWidth != 0) { 
+		if (topographyWidth % blockWidth != 0) { 
 			fatal("Block width must divide grid width equally!");
 		}
 		
-		if (blockHeight > topologyHeight) { 
+		if (blockHeight > topographyHeight) { 
 			fatal("Block height cannot be larger that grid height");
 		}
 		
-		if (topologyHeight % blockHeight != 0) { 
+		if (topographyHeight % blockHeight != 0) { 
 			fatal("Block height must divide grid height equally!");
 		}
 		

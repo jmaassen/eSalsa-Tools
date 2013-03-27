@@ -34,23 +34,23 @@ import nl.esciencecenter.esalsa.util.Layers;
 import nl.esciencecenter.esalsa.util.Line;
 import nl.esciencecenter.esalsa.util.Neighbours;
 import nl.esciencecenter.esalsa.util.Set;
-import nl.esciencecenter.esalsa.util.Topology;
-import nl.esciencecenter.esalsa.util.TopologyCanvas;
+import nl.esciencecenter.esalsa.util.Topography;
+import nl.esciencecenter.esalsa.util.TopographyCanvas;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * A DistributionViewer is used to draw the outlines of sets of blocks on a topology. The results can be inspected in a 
- * TopologyCanvas or saved to an image file.    
+ * A DistributionViewer is used to draw the outlines of sets of blocks on a topography. The results can be inspected in a 
+ * TopographyCanvas or saved to an image file.    
  * 
  * @author Jason Maassen <J.Maassen@esciencecenter.nl>
  * @version 1.0
  * @since 1.0
  * @see Set
  * @see Block
- * @see Topology
- * @see TopologyCanvas 
+ * @see Topography
+ * @see TopographyCanvas 
  *
  */
 public class DistributionViewer {
@@ -112,14 +112,14 @@ public class DistributionViewer {
 	/** The distribution to show */ 
 	private final Distribution distribution;
 
-	/** The topology to use. */ 
-	private final Topology topology;
+	/** The topography to use. */ 
+	private final Topography topography;
 
 	/** The function object use to determine block neighbors. */
 	private final Neighbours neighbours; 
 
-	/** A TopologyCanvas showing the topology */
-	private final TopologyCanvas view; 
+	/** A TopographyCanvas showing the topography */
+	private final TopographyCanvas view; 
 
 	/** The Grid to use */
 	private final Grid grid;
@@ -127,7 +127,7 @@ public class DistributionViewer {
 	/** The Layers containing the various subdivisions of blocks into subsets */ 
 	private final Layers layers;
 
-	/** Used the receive mouse clicks on the TopologyView */
+	/** Used the receive mouse clicks on the TopographyView */
 	class MyListener implements MouseListener {
 
 		@Override
@@ -157,25 +157,25 @@ public class DistributionViewer {
 	}
 
 	/** 
-	 * Create a new DistributionViewer for the given topology, grid and layers. 
+	 * Create a new DistributionViewer for the given topography, grid and layers. 
 	 * 
 	 * @param distribution the distribution to show. 
-	 * @param topology the topology to use. 
+	 * @param topography the topography to use. 
 	 * @param grid the grid to use. 
 	 * @param neighbours the function object use to determine block neighbors.
 	 * @param showGUI should the GUI be shown ?
 	 * @throws Exception if the DistributionViewer could not be initialized.
 	 */
-	public DistributionViewer(Distribution distribution, Topology topology, Grid grid, Neighbours neighbours, boolean showGUI) 
+	public DistributionViewer(Distribution distribution, Topography topography, Grid grid, Neighbours neighbours, boolean showGUI) 
 			throws Exception {
 		
 		this.distribution = distribution;
-		this.topology = topology;
+		this.topography = topography;
 		this.grid = grid;
 		this.neighbours = neighbours;		
 		this.layers = distribution.toLayers();
 
-		view = new TopologyCanvas(topology, grid);
+		view = new TopographyCanvas(topography, grid);
 		view.addLayer("BLOCKS");
 		view.addLayer("CLUSTERS");
 		view.addLayer("NODES");
@@ -183,7 +183,7 @@ public class DistributionViewer {
 		view.addLayer("FILL");
 
 		if (showGUI) { 
-			JFrame frame = new JFrame("Topology");
+			JFrame frame = new JFrame("Topography");
 			frame.setSize(1000, 667);
 			frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 			frame.getContentPane().add(view);
@@ -239,7 +239,7 @@ public class DistributionViewer {
 	}
 
 	/** 
-	 * Callback function for the <code>MouseListener</code> attached to the TopologyView.
+	 * Callback function for the <code>MouseListener</code> attached to the TopographyView.
 	 * 
 	 * @param p the Point that has been clicked. 
 	 * @throws Exception if the mouse click could not be processed. 
@@ -253,8 +253,8 @@ public class DistributionViewer {
 		double w = view.getWidth();
 		double h = view.getHeight();
 
-		int posX = (int) ((p.x / w) * topology.width);
-		int posY = topology.height - (int) ((p.y / h) * topology.height);
+		int posX = (int) ((p.x / w) * topography.width);
+		int posY = topography.height - (int) ((p.y / h) * topography.height);
 
 		int bx = posX / grid.blockWidth;
 		int by = posY / grid.blockHeight;
@@ -525,16 +525,23 @@ public class DistributionViewer {
 	public static void main(String [] args) { 
 
 		if (args.length < 2) { 
-			System.out.println("Usage: DistributionViewer topologyFile distributionFile");
+			System.out.println("Usage: DistributionViewer [topography_file] [distribution_file]\n" + 
+					"\n" + 
+					"Read a topography file and work distribution file and show a graphical interface that allows " + 
+					"the user to interactively explore the work distribution.\n" + 
+					"\n" + 
+					"  [topography_file]   a topography file that contains the index of the deepest ocean level at " + 
+					"each gridpoint.\n" + 
+					"  [distribution_file] a work distribution file.\n"); 		
 			System.exit(1);
 		}
 
-		String topologyFile = args[0];
+		String topographyFile = args[0];
 		String distributionFile = args[1];
 
 		try { 			
 			Distribution d = new Distribution(distributionFile);
-			Topology t = new Topology(d.topologyWidth, d.topologyHeight, topologyFile);
+			Topography t = new Topography(d.topographyWidth, d.topographyHeight, topographyFile);
 			Grid g = new Grid(t, d.blockWidth, d.blockHeight);
 			Neighbours n = new Neighbours(g, d.blockWidth, d.blockHeight, Neighbours.CYCLIC, Neighbours.TRIPOLE);
 			

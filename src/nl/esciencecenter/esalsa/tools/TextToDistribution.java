@@ -46,8 +46,8 @@ public class TextToDistribution {
 		Distribution d = null;
 		
 		try { 
-			int topologyWidth = Integer.parseInt(r.readLine().trim());
-			int topologyHeight = Integer.parseInt(r.readLine().trim());
+			int topographyWidth = Integer.parseInt(r.readLine().trim());
+			int topographyHeight = Integer.parseInt(r.readLine().trim());
 			
 			int blockWidth = Integer.parseInt(r.readLine().trim());
 			int blockHeight = Integer.parseInt(r.readLine().trim());
@@ -69,7 +69,7 @@ public class TextToDistribution {
 
 			r.close();
 			
-			d = new Distribution(topologyWidth, topologyHeight, blockWidth, blockHeight, 
+			d = new Distribution(topographyWidth, topographyHeight, blockWidth, blockHeight, 
 					clusters, nodesPerCluster, coresPerNode, minBlocksPerCore, maxBlocksPerCore, totalBlocks, distribution);
 
 			d.write(args[1]);

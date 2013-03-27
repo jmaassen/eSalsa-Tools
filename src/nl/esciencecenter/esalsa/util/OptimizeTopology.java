@@ -22,11 +22,11 @@ import javax.swing.JFrame;
 
 public class OptimizeTopology {
 
-	private final Topology topology;
+	private final Topography topology;
 	private final Grid grid;
 	private final Neighbours neighbours;
 	
-	public OptimizeTopology(Topology topology, Grid grid, Neighbours neighbours) { 
+	public OptimizeTopology(Topography topology, Grid grid, Neighbours neighbours) { 
 		this.topology = topology;
 		this.grid = grid;
 		this.neighbours = neighbours;
@@ -102,7 +102,7 @@ public class OptimizeTopology {
 				}
 			}
 		
-			Topology t = new Topology(data);
+			Topography t = new Topography(data);
 			Grid g = new Grid(t, grid.blockWidth, grid.blockHeight);
 
 			int min = Integer.MAX_VALUE;
@@ -129,7 +129,7 @@ public class OptimizeTopology {
 
 			System.out.println("Minimum " + min + " at " + minIndex);
 			
-			TopologyCanvas tc = new TopologyCanvas(t, g);
+			TopographyCanvas tc = new TopographyCanvas(t, g);
 			
 			tc.addLayer("LINES");
 			tc.addLayer("BLOCKS");
@@ -191,7 +191,7 @@ public class OptimizeTopology {
 			int topologyWidth = Integer.parseInt(args[1]);
 			int topologyHeight = Integer.parseInt(args[2]);
 
-			Topology t = new Topology(topologyWidth, topologyHeight, args[0]);
+			Topography t = new Topography(topologyWidth, topologyHeight, args[0]);
 
 			int blockWidth = Integer.parseInt(args[3]);
 			int blockHeight = Integer.parseInt(args[4]);

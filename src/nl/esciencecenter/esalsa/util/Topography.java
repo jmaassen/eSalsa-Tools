@@ -25,53 +25,52 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * A Topology represents a topology used as input for POP. 
+ * A Topography represents a bottom topography definition used as input for POP. 
  * 
- * A topology is stored as a matrix of integer values of size width x height. A value 
- * of 0 at any position indicates a land point, while a value > 0 indicates the depth 
- * level of the ocean at the given position.  
+ * A bottom topography contains the index (> 0) of the deepest ocean level for each grid point. A value of 0 at any position 
+ * indicates a land point. 
  * 
  * @author Jason Maassen <J.Maassen@esciencecenter.nl>
  * @version 1.0
  * @since 1.0
  * 
  */
-public class Topology {
+public class Topography {
 
 	/** A logger used for debugging */
-	private static final Logger logger = LoggerFactory.getLogger(Topology.class);
+	private static final Logger logger = LoggerFactory.getLogger(Topography.class);
 	
-	/** The topology data as read from the input file */
-	private final int [][] topology;
+	/** The topography data as read from the input file */
+	private final int [][] topography;
 	
-	/** The width of the topology */
+	/** The width of the topography */
 	public final int width;
 	
-	/** The height of the topology */
+	/** The height of the topography */
 	public final int height;
 	
-	/** The maximum value found in the topology */
+	/** The maximum value found in the topography */
 	public final int max;
 	
-	/** The minimum value found in the topology */
+	/** The minimum value found in the topopgrapy */
 	public final int min;
 	
 	/** 
-	 * Create a new topology by reading the data from the input file.  
+	 * Create a new topography by reading the data from the input file.  
 	 * 
-	 * @param width the width of the topology to create.
-	 * @param height the height of the topology to create.
-	 * @param inputfile the input file from which to read the topology data.
-	 * @throws Exception if the topology could not be created. 
+	 * @param width the width of the topography to create.
+	 * @param height the height of the topography to create.
+	 * @param inputfile the input file from which to read the topography data.
+	 * @throws Exception if the topography could not be created. 
 	 */
-	public Topology(int width, int height, String inputfile) throws Exception {
+	public Topography(int width, int height, String inputfile) throws Exception {
 	
 		int tmpMax = Integer.MIN_VALUE;
 		int tmpMin = Integer.MAX_VALUE;
 		
 		this.width = width;
 		this.height = height;
-		topology = new int[width][height];
+		topography = new int[width][height];
 
 		int work = 0;
 		long sum = 0;
@@ -85,8 +84,8 @@ public class Topology {
 				for (int x=0;x<width;x++) {
 					int tmp = in.readInt();
 
-					//topology[x][height-y-1] = tmp;
-					topology[x][y] = tmp;
+					//topography[x][height-y-1] = tmp;
+					topography[x][y] = tmp;
 
 					if (tmp > tmpMax) { 
 						tmpMax = tmp;
@@ -106,7 +105,7 @@ public class Topology {
 
 			in.close();
 		} catch (Exception e) { 
-			throw new Exception("Failed to initialize Topology from file " + inputfile, e);
+			throw new Exception("Failed to read topography from file " + inputfile, e);
 		} finally { 
 			try { 
 				in.close();
@@ -119,17 +118,17 @@ public class Topology {
 		min = tmpMin;		
 		
 		if (logger.isDebugEnabled()) { 
-			logger.debug("Topology contains " + work + " nonzero fields (sum = " + sum + ")");
+			logger.debug("Topography contains " + work + " nonzero fields (sum = " + sum + ")");
 		}
 	}
 
 	/** 
-	 * Create a new topology from existing data.  
+	 * Create a new topography from existing data.  
 	 * 
-	 * @param data a square int matrix containing the data to store in the topology.
-	 * @throws Exception if the topology could not be created. 
+	 * @param data a square int matrix containing the data to store in the topography.
+	 * @throws Exception if the topography could not be created. 
 	 */
-	public Topology(int [][] data) throws Exception {
+	public Topography(int [][] data) throws Exception {
 	
 		int tmpMax = Integer.MIN_VALUE;
 		int tmpMin = Integer.MAX_VALUE;
@@ -140,12 +139,12 @@ public class Topology {
 		int work = 0;
 		long sum = 0;
 		
-		topology = data.clone(); 
+		topography = data.clone(); 
 		
 		for (int y=0;y<height;y++) { 
 			for (int x=0;x<width;x++) {
 					
-				int tmp = topology[x][y];
+				int tmp = topography[x][y];
 
 				if (tmp > tmpMax) { 
 					tmpMax = tmp;
@@ -167,23 +166,23 @@ public class Topology {
 		min = tmpMin;		
 		
 		if (logger.isDebugEnabled()) { 
-			logger.debug("Topology contains " + work + " nonzero fields (sum = " + sum + ")");
+			logger.debug("Topography contains " + work + " nonzero fields (sum = " + sum + ")");
 		}
 	}
 	
 	/** 
-	 * Create a new topology by down scaling an existing one.
+	 * Create a new topography by down scaling an existing one.
 	 * 
-	 * The down scaling will be performed block wise. The original topology will be divided in blocks of size 
-	 * (blockWidth x blockHeight). Each block will become a single point in the new topology. The value of this point will be the 
-	 * sum of all values in the block in the original topology.       
+	 * The down scaling will be performed block wise. The original topography will be divided in blocks of size 
+	 * (blockWidth x blockHeight). Each block will become a single point in the new topography. The value of this point will be the 
+	 * sum of all values in the block in the original topography.       
 	 *  
-	 * @param orig the original topology. 
+	 * @param orig the original topography. 
 	 * @param blockWidth the block width to use for down scaling.  
 	 * @param blockHeight the block height to use for down scaling.
-	 * @throws Exception if the topology could not be scaled down. 
+	 * @throws Exception if the topography could not be scaled down. 
 	 */
-	public Topology(Topology orig, int blockWidth, int blockHeight) throws Exception {
+	public Topography(Topography orig, int blockWidth, int blockHeight) throws Exception {
 		
 		int tmpMax = Integer.MIN_VALUE;
 		int tmpMin = Integer.MAX_VALUE;
@@ -198,7 +197,7 @@ public class Topology {
 		
 		this.width = orig.width / blockWidth;
 		this.height = orig.height / blockHeight;
-		topology = new int[width][height];
+		topography = new int[width][height];
 		
 		int work = 0;
 		long sum = 0;
@@ -208,7 +207,7 @@ public class Topology {
 
 				int tmp = orig.getRectangleSum(x*blockWidth, y*blockHeight, blockWidth, blockHeight);
 				 
-				topology[x][y] = tmp;
+				topography[x][y] = tmp;
 						
 				if (tmp > tmpMax) { 
 					tmpMax = tmp;
@@ -230,12 +229,12 @@ public class Topology {
 		min = tmpMin;		
 		
 		if (logger.isDebugEnabled()) { 
-			logger.debug("Topology contains " + work + " nonzero fields (sum = " + sum + ")");
+			logger.debug("Topography contains " + work + " nonzero fields (sum = " + sum + ")");
 		}
 	}
 
 	/** 
-	 * Returns the maximum value found in a rectangular area of the topology.  
+	 * Returns the maximum value found in a rectangular area of the topography.  
 	 * 
 	 * @param x the x position of the rectangle. 
 	 * @param y the y position of the rectangle.
@@ -249,7 +248,7 @@ public class Topology {
 		
 		for (int i=x;i<x+w && i<width;i++) {
 			for (int j=y;j<y+h && j<height;j++) {
-				int tmp = topology[i][j];
+				int tmp = topography[i][j];
 				if (tmp > max) { 
 					max = tmp;
 				}
@@ -260,7 +259,7 @@ public class Topology {
 	}
 	
 	/** 
-	 * Returns the average value found in a rectangular area of the topology.  
+	 * Returns the average value found in a rectangular area of the topography.  
 	 * 
 	 * @param x the x position of the rectangle. 
 	 * @param y the y position of the rectangle.
@@ -275,7 +274,7 @@ public class Topology {
 		
 		for (int i=x;i<x+w && i<width;i++) {
 			for (int j=y;j<y+h && j<height;j++) {
-				sum += topology[i][j];
+				sum += topography[i][j];
 				count++;
 			}
 		}
@@ -288,7 +287,7 @@ public class Topology {
 	}
 	
 	/** 
-	 * Returns the sum of all values found in a rectangular area of the topology.  
+	 * Returns the sum of all values found in a rectangular area of the topography.  
 	 * 
 	 * @param x the x position of the rectangle. 
 	 * @param y the y position of the rectangle.
@@ -302,7 +301,7 @@ public class Topology {
 		
 		for (int i=x;i<x+w && i<width;i++) {
 			for (int j=y;j<y+h && j<height;j++) {
-				sum += topology[i][j];
+				sum += topography[i][j];
 			}
 		}
 		
@@ -310,7 +309,7 @@ public class Topology {
 	}
 	
 	/** 
-	 * Returns the amount of work (that is, non-0 values) found in a rectangular area of the topology.  
+	 * Returns the amount of work (that is, non-0 values) found in a rectangular area of the topography.  
 	 * 
 	 * @param x the x position of the rectangle. 
 	 * @param y the y position of the rectangle.
@@ -324,9 +323,8 @@ public class Topology {
 		
 		for (int i=x;i<x+w && i<width;i++) {
 			for (int j=y;j<y+h && j<height;j++) {
-				if (topology[i][j] > 0) {
+				if (topography[i][j] > 0) {
 					work++;
-					//work += topology[i][j];
 				}
 			}
 		}
@@ -335,13 +333,13 @@ public class Topology {
 	}
 
 	/**
-	 * Retrieves the value of a specific location of the topology. 
+	 * Retrieves the value of a specific location of the topography. 
 	 * 
 	 * @param x the x coordinate of the value to retrieve.
 	 * @param y the y coordinate of the value to retrieve.
-	 * @return the value found at the specified location in the topology.
+	 * @return the value found at the specified location in the topography.
 	 */
 	public int get(int x, int y) {
-		return topology[x][y];
+		return topography[x][y];
 	}
 }

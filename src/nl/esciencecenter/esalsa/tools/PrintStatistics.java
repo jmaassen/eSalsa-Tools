@@ -22,7 +22,7 @@ import nl.esciencecenter.esalsa.util.Layer;
 import nl.esciencecenter.esalsa.util.Layers;
 import nl.esciencecenter.esalsa.util.Neighbours;
 import nl.esciencecenter.esalsa.util.Set;
-import nl.esciencecenter.esalsa.util.Topology;
+import nl.esciencecenter.esalsa.util.Topography;
 
 public class PrintStatistics {
 
@@ -88,7 +88,7 @@ public class PrintStatistics {
 		try { 			
 			Distribution d = new Distribution(args[0]);
 			
-			Topology t = new Topology(d.topologyWidth, d.topologyHeight, args[1]);
+			Topography t = new Topography(d.topographyWidth, d.topographyHeight, args[1]);
 			Grid g = new Grid(t, d.blockWidth, d.blockHeight);
 			
 			Neighbours n = new Neighbours(g, d.blockWidth, d.blockHeight, Neighbours.CYCLIC, Neighbours.TRIPOLE);
