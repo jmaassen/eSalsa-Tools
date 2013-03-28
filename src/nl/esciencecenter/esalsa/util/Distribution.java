@@ -316,17 +316,17 @@ public class Distribution {
 				Block b = new Block(new Coordinate(i % blocksPerRow, i / blocksPerRow));
 				
 				current.add(b);
-				blockLayer.add(new Set(b));
+				blockLayer.add(new Set(b, i));
 				allBlocks.add(b);
 			} 
 		}
 
 		// Create a layer containing one set with all blocks. 
-		combinedLayer.add(new Set(allBlocks));
+		combinedLayer.add(new Set(allBlocks, 0));
 		
 		// Create a layers containing one set per core. 
 		for (int i=0;i<totalCores;i++) { 
-			coresLayer.add(new Set(tmp[i]));
+			coresLayer.add(new Set(tmp[i], i));
 		}
 		
 		// Create a layers containing one set per node. 
@@ -342,7 +342,7 @@ public class Distribution {
 				core.getAll(blocksOfNode);
 			}
 			
-			Set node = new Set(blocksOfNode);
+			Set node = new Set(blocksOfNode, i);
 			node.addSubSets(coresOfNode);
 			nodesLayer.add(node);
 		}
@@ -360,7 +360,7 @@ public class Distribution {
 				node.getAll(blocksOfCluster);
 			}
 					
-			Set cluster = new Set(blocksOfCluster);
+			Set cluster = new Set(blocksOfCluster, i);
 			cluster.addSubSets(nodesOfCluster);
 			clusterLayer.add(cluster);
 		}

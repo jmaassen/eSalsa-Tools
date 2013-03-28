@@ -58,6 +58,9 @@ public class Set implements Iterable<Block> {
 	/** The amount of external (out of set) communication required by the block in this set. */ 
 	private int communication = -1;
 	
+	/** The index of this set on the layer it belogs to. */ 
+	public final int index;
+	
 	/** A Comparator used to sort blocks on their coordinates (smallest first). */   
 	private class BlockComparator implements Comparator<Block> {
 
@@ -86,7 +89,8 @@ public class Set implements Iterable<Block> {
 	 * 
 	 * @param block the block to insert into this set.
 	 */
-	public Set(Block block) {
+	public Set(Block block, int index) {
+		this.index = index;
 		blocks = new Block[] { block };
 		minX = maxX = block.coordinate.x;
 		minY = maxY = block.coordinate.y;
@@ -97,8 +101,10 @@ public class Set implements Iterable<Block> {
 	 *
 	 * @param collection the blocks to add to the set.  
 	 */
-	public Set(Collection<Block> collection) {
-		
+	public Set(Collection<Block> collection, int index) {
+
+		this.index = index;
+
 		if (collection == null || collection.size() == 0) { 
 			//throw new IllegalArgumentException("Empty Set not allowed!");
 			blocks = new Block[0];
@@ -149,7 +155,9 @@ public class Set implements Iterable<Block> {
 	 * 
 	 * @param blocks the blocks to add to the set.
 	 */
-	public Set(Block [] blocks) {
+	public Set(Block [] blocks, int index) {
+		
+		this.index = index;
 		
 		if (blocks == null || blocks.length == 0) { 
 			throw new IllegalArgumentException("Empty Set not allowed!");
@@ -197,8 +205,10 @@ public class Set implements Iterable<Block> {
 	 * 
 	 * @param set the set to copy the blocks from.  
 	 */
-	public Set(Set set) {
+	public Set(Set set, int index) {
 
+		this.index = index;
+		
 		minX = set.minX;
 		maxX = set.maxX;
 		minY = set.minY;
@@ -245,6 +255,8 @@ public class Set implements Iterable<Block> {
 	public Coordinate [] getNeighbours(Neighbours neighbours) {
 		
 		if (this.neighbours == null) { 
+		
+			communication = 0;
 			
 			HashSet<Coordinate> result = new HashSet<Coordinate>();
 		

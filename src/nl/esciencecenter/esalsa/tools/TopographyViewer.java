@@ -41,7 +41,7 @@ public class TopographyViewer {
 	 */
 	public static void main(String [] args) { 
 
-		if (args.length < 5) { 
+		if (args.length < 3) { 
 			System.out.println("Usage: TopographyViewer topography_file topography_width topography_height " + 
 					"block_width block_height [--showGUI] [--image image.png]\n" + 
 					"\n" + 
@@ -49,15 +49,13 @@ public class TopographyViewer {
 					"block_width x block_height. Optionally, the result can be shown in a graphical interface or saved in an " +
 					"image.\n" + 
 					"\n" + 
-					"  topography_file       a topography file that contains the index of the deepest ocean level at " + 
+					"  topography_file         a topography file that contains the index of the deepest ocean level at " + 
 					"each gridpoint.\n" + 
-					"  topography_width      the width of the topography.\n" + 
-					"  topography_height     the heigth of the topography.\n" +
-					"  block_width           the width of the blocks.\n" + 
-					"  block_height          the heigth of the blocks.\n" + 
-					"  [--showGUI]           show the result in a graphical interface.\n" + 
-					"  [--showWork]          color blocks according to work.\n" + 					
-					"  [--image image.png]   store the result in a png image.\n");
+					"  topography_width        the width of the topography.\n" + 
+					"  topography_height       the heigth of the topography.\n" +
+					"  [--blocks width height] divide the topology into blocks of width c height.\n" + 
+					"  [--showWork]            color blocks according to work.\n" + 					
+					"  [--image image.png]     store the result in a png image instead of showing it in a GUI.\n");
 			
 			System.exit(1);
 		}
@@ -66,28 +64,40 @@ public class TopographyViewer {
 		int width = Utils.parseInt("topography_width", args[1], 1);
 		int height = Utils.parseInt("topography_height", args[2], 1);
 
-		int blockWidth = Utils.parseInt("block_width", args[3], 1);
-		int blockHeight = Utils.parseInt("block_width", args[4], 1);
-
-		boolean showGUI = false;
+		int blockWidth = width;
+		int blockHeight = height;
+				
 		boolean showWork = false;
 		
 		String output = null;
+
+		int i=3;
 		
-		for (int i=5;i<args.length;i++) { 
-			
-			if (args[i].equals("--showGUI")) { 
-				showGUI = true;
+		while (i<args.length) { 
+
+			if (args[i].equals("--blocks")) {
+				
+				if ((i+2) >= args.length) { 
+					Utils.fatal("Option \"--blocks\" requires width and height parameters!");
+				} 
+
+				blockWidth = Utils.parseInt("block_width", args[i+1], 1);
+				blockHeight = Utils.parseInt("block_height", args[i+2], 1);
+				i += 3;
+				
 			} else if (args[i].equals("--showWork")) { 
 				showWork = true;
+				i++;
+				
 			} else if (args[i].equals("--image")) {
 				
-				if ((i+1) < args.length) { 
-					output = args[i+1];
-					i++;
-				} else { 
+				if ((i+1) >= args.length) {
 					Utils.fatal("Option \"--image\" requires parameter!");
 				}
+					
+				output = args[i+1];
+				i += 2;
+				
 			} else { 
 				Utils.fatal("Unknown option " + args[i]);
 			}
@@ -96,11 +106,6 @@ public class TopographyViewer {
 		try { 			
 			Topography t = new Topography(width, height, topographyFile);
 			Grid g = new Grid(t, blockWidth, blockHeight);
-
-			if (!showGUI && output == null) {
-				// Nothing to do!
-				return;
-			}
 			
 			Color c = new Color(128, 128, 128, 128);
 
@@ -115,12 +120,12 @@ public class TopographyViewer {
 			tc.draw("LINES", new Line(new Coordinate(0, g.height), new Coordinate(g.width, g.height)), c, 7.0f);
 			tc.draw("LINES", new Line(new Coordinate(g.width, 0), new Coordinate(g.width, g.height)), c, 7.0f);
 			
-			for (int i=1;i<g.width;i++) {
-				tc.draw("LINES", new Line(new Coordinate(i, 0), new Coordinate(i, g.height)), c, 7.0f);	
+			for (int w=1;w<g.width;w++) {
+				tc.draw("LINES", new Line(new Coordinate(w, 0), new Coordinate(w, g.height)), c, 7.0f);	
 			}
 			
-			for (int i=1;i<g.height;i++) {
-				tc.draw("LINES", new Line(new Coordinate(0,i), new Coordinate(g.width,i)), c, 7.0f);	
+			for (int h=1;h<g.height;h++) {
+				tc.draw("LINES", new Line(new Coordinate(0,h), new Coordinate(g.width,h)), c, 7.0f);	
 			}
 
 			if (showWork) { 
@@ -134,17 +139,15 @@ public class TopographyViewer {
 					}
 				}
 			}
-			
-			if (showGUI) { 
+
+			if (output == null) { 
 				JFrame frame = new JFrame("Topograpy");
 				frame.setSize(1000, 667);
 				frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 				frame.getContentPane().add(tc);
 				frame.setVisible(true);			
 				tc.repaint();
-			}
-			
-			if (output != null) { 
+			} else { 
 				tc.save(output);
 			}
 			

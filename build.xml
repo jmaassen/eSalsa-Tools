@@ -9,7 +9,7 @@
     <property name="srcdir" value="./src" />
     <property name="builddir" value="./build" />
     <property name="distdir" value="./dist" />
-    <property name="javadoc" value="${distdir}/javadoc" />
+    <property name="javadoc" value="./docs/javadoc" />
     <property name="build.sysclasspath" value="ignore"/>
 
     <target name="copy">
@@ -43,7 +43,6 @@
 
     <target name="javadoc" description="Create javadocs">
         <!-- Create the javadoc -->
-        <mkdir dir="${distdir}" />
         <mkdir dir="${javadoc}" />
         <mkdir dir="${javadoc}/esalsa" />
         <javadoc destdir="${javadoc}/esalsa" access="public" sourcepath="src" windowtitle="eSalsa Tools Documentation" packagenames="nl.esciencecenter.esalsa.*" doctitle="eSalsa Tools ${version} Documentation" bottom="eSalsa Tools ${version}" classpathref="default.classpath">

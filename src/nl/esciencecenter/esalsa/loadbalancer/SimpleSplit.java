@@ -92,7 +92,7 @@ public class SimpleSplit extends Split {
 						tmp.add(b);
 
 						if (tmp.size() == targetWork[index]) { 
-							result.add(new Set(tmp));
+							result.add(new Set(tmp, index));
 							tmp.clear();
 							index++;
 						}
@@ -108,7 +108,7 @@ public class SimpleSplit extends Split {
 						tmp.add(b);
 
 						if (tmp.size() == targetWork[index]) { 
-							result.add(new Set(tmp));
+							result.add(new Set(tmp, index));
 							tmp.clear();
 							index++;
 						}
@@ -144,7 +144,7 @@ public class SimpleSplit extends Split {
 						tmp.add(b);
 
 						if (tmp.size() == targetWork[index]) { 
-							result.add(new Set(tmp));
+							result.add(new Set(tmp, index));
 							tmp.clear();
 							index++;
 						}
@@ -160,7 +160,7 @@ public class SimpleSplit extends Split {
 						tmp.add(b);
 
 						if (tmp.size() == targetWork[index]) { 
-							result.add(new Set(tmp));
+							result.add(new Set(tmp, index));
 							tmp.clear();
 							index++;
 						}

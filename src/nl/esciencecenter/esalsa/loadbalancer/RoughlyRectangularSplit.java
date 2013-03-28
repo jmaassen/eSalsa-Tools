@@ -161,7 +161,7 @@ public class RoughlyRectangularSplit extends Split {
 						tmp.add(b);
 
 						if (tmp.size() == targetWork[index]) { 
-							result[index] = new Set(tmp);
+							result[index] = new Set(tmp, index);
 							tmp.clear();
 							index++;
 						}
@@ -177,7 +177,7 @@ public class RoughlyRectangularSplit extends Split {
 						tmp.add(b);
 
 						if (tmp.size() == targetWork[index]) { 
-							result[index] = new Set(tmp);
+							result[index] = new Set(tmp, index);
 							tmp.clear();
 							index++;
 						}
@@ -220,7 +220,7 @@ public class RoughlyRectangularSplit extends Split {
 						tmp.add(b);
 
 						if (tmp.size() == targetWork[index]) { 
-							result[index] = new Set(tmp);
+							result[index] = new Set(tmp, index);
 							tmp.clear();
 							index++;
 						}
@@ -236,7 +236,7 @@ public class RoughlyRectangularSplit extends Split {
 						tmp.add(b);
 
 						if (tmp.size() == targetWork[index]) { 
-							result[index] = new Set(tmp);
+							result[index] = new Set(tmp, index);
 							tmp.clear();
 							index++;
 						}
@@ -338,6 +338,7 @@ public class RoughlyRectangularSplit extends Split {
 	 * <p>  
 	 * <ul>
 	 * <li> if <code>floor(root) == ceil(root)</code> the grid is a perfect square.</li>   
+	 * 
 	 * <li> if <code>floor(root) * ceil(root) == subsets</code> the grid is a perfect rectangle.</li>
 	 * <li> otherwise the grid is an imperfect rectangle, where some rows of the grid contain more columns than others</li> 
 	 * </ul>

@@ -258,16 +258,52 @@ public class DistributionViewer {
 		int bx = posX / grid.blockWidth;
 		int by = posY / grid.blockHeight;
 
-		System.out.println("Selected block " + bx + "x" + by);
+		int commBlock = -1;
+		int commCore = -1;
+		int commNode = -1;
+		int commCluster = -1;
 
+		int block = -1;
+		int core = -1;
+		int node = -1;
+		int cluster = -1;
+
+/*
+ 		Coordinate c = new Coordinate(bx, by);
+		
+		int [][] comm = neighbours.getCommunication(c);
+
+		System.out.println("Communication on BLOCK layer: ");
+
+		for (int i=0;i<3;i++) { 
+			for (int j=0;j<3;j++) {
+				System.out.print(" " + comm[i][j]);
+			}
+			System.out.println();
+		}
+*/
+				
 		view.clearLayer("FILL");
+		
+		if (layers.contains("BLOCKS")) { 
 
+			Layer l = layers.get("BLOCKS");		
+			Set s = l.locate(bx, by);
+
+			if (s != null) { 
+				block = s.index;
+				commBlock = s.getCommunication(neighbours);
+				colorEdge("FILL", s, HALO_COLOR_BLOCK, LAND_COLOR_BLOCK);
+			}			
+		}
+		
 		if (layers.contains("CORES")) { 
 			Layer l = layers.get("CORES");		
 			Set s = l.locate(bx, by);
 
 			if (s != null) { 
-				System.out.println("Communication on layer CORE " + s.getCommunication(neighbours));
+				core = s.index;
+				commCore = s.getCommunication(neighbours);
 				colorEdge("FILL", s, HALO_COLOR_CORE, LAND_COLOR_CORE);
 			}			
 		}
@@ -276,8 +312,9 @@ public class DistributionViewer {
 			Layer l = layers.get("NODES");
 			Set s = l.locate(bx, by);
 
-			if (s != null) { 
-				System.out.println("Communication on layer NODE " + s.getCommunication(neighbours));
+			if (s != null) {
+				node = s.index;
+				commNode = s.getCommunication(neighbours);
 				colorEdge("FILL", s, HALO_COLOR_NODE, LAND_COLOR_NODE);
 			}			
 		}
@@ -286,14 +323,31 @@ public class DistributionViewer {
 			Layer l = layers.get("CLUSTERS");
 			Set s = l.locate(bx, by);
 
-			if (s != null) { 
-				System.out.println("Communication on layer CLUSTER " + s.getCommunication(neighbours));
+			if (s != null) { 				
+				cluster = s.index;				
+				commCluster = s.getCommunication(neighbours);
 				colorEdge("FILL", s, HALO_COLOR_CLUSTER, LAND_COLOR_CLUSTER);
 			}			
 		}
 
-		Coordinate c = new Coordinate(bx, by);
+		System.out.print("Selected");	
+		
+		if (cluster >= 0) { 
+			System.out.print(" cluster " + cluster);	
+		}
+		
+		if (node >= 0) { 
+			System.out.print(" node " + node);	
+		}
+		
+		System.out.println(" core " + core + " block " + block + " (" + bx + "x" + by + ")");
+		
+		System.out.println("Communication on layer BLOCK " + commBlock);
+		System.out.println("Communication on layer CORE " + commCore);
+		System.out.println("Communication on layer NODE " + commNode);
+		System.out.println("Communication on layer CLUSTER " + commCluster);
 
+		/*
 		Coordinate [][] tmp = neighbours.getNeighbours(c, true);
 
 		for (int i=0;i<3;i++) { 
@@ -313,18 +367,8 @@ public class DistributionViewer {
 				}
 			}
 		}
-
-		int [][] comm = neighbours.getCommunication(c);
-
-		System.out.println("Communication on BLOCK layer: ");
-
-		for (int i=0;i<3;i++) { 
-			for (int j=0;j<3;j++) {
-				System.out.print(" " + comm[i][j]);
-			}
-			System.out.println();
-		}
-
+*/
+		
 		view.fillBlock("FILL", bx, by, CENTER);
 		view.repaint();
 	}

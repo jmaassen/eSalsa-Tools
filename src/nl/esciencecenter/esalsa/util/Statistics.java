@@ -62,9 +62,9 @@ public class Statistics {
 		output.println("  Sets: " + layer.size());
 	
 		for (int i=0;i<layer.size();i++) { 
-			Set tmp = layer.get(i);
-			output.println("   " + i + " (" + tmp.minX + "," + tmp.minY + ") - (" + tmp.maxX + "," + tmp.maxY + ") " + 
-			tmp.size() + " " + tmp.getCommunication(neighbours));
+			Set tmp = layer.get(i);			
+			// output.println("   " + i + " (" + tmp.minX + "," + tmp.minY + ") - (" + tmp.maxX + "," + tmp.maxY + ") " + 
+			output.println("   " + i + " " + tmp.size() + " " + tmp.getCommunication(neighbours));
 		}
 	}
 

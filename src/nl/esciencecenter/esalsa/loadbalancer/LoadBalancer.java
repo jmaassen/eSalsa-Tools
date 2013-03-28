@@ -32,9 +32,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
+ * 
  * LoadBalancer is used to generate a block distribution for the Parallel Ocean Program (POP). This block distribution is based
  * on the ocean topography, the desired block size, and the desired number of clusters, nodes per cluster, and cores per node. 
- * 
  * @author Jason Maassen <J.Maassen@esciencecenter.nl>
  * @version 1.0
  * @since 1.0
@@ -115,13 +115,13 @@ public class LoadBalancer {
 				Block b = grid.get(x, y);
 				
 				if (b != null) {					
-					blockLayer.add(new Set(b));
+					blockLayer.add(new Set(b, y*grid.width + x));
 					allBlocks.add(b);
 				}
 			}
 		}
 		
-		combinedLayer.add(new Set(allBlocks));
+		combinedLayer.add(new Set(allBlocks, 0));
 		
 		// Add both layers to the store.  
 		layers.add(combinedLayer);
@@ -143,7 +143,7 @@ public class LoadBalancer {
 		
 		// Creating a subset of size 1 is easy. 
 		if (subsets == 1) { 
-			output.add(new Set(set));
+			output.add(new Set(set, 0));
 			return;
 		}
 		
@@ -153,7 +153,7 @@ public class LoadBalancer {
 		
 		if (size <= subsets) { 
 			for (int i=0;i<size;i++) { 
-				output.add(new Set(set.get(i)));
+				output.add(new Set(set.get(i), i));
 			}	
 			
 			return;
