@@ -163,10 +163,11 @@ public class DistributionViewer {
 	 * @param grid the grid to use. 
 	 * @param neighbours the function object use to determine block neighbors.
 	 * @param showGUI should the GUI be shown ?
+	 * @param highContrast should a highContrast image be used ?
 	 * @throws Exception if the DistributionViewer could not be initialized.
 	 */
 	public DistributionViewer(Distribution distribution, Topography topography, Grid grid, Neighbours neighbours, 
-			boolean showGUI, boolean showWork) throws Exception {
+			boolean showGUI, boolean highContrast) throws Exception {
 		
 		this.distribution = distribution;
 		this.topography = topography;
@@ -176,7 +177,7 @@ public class DistributionViewer {
 
 		view = new TopographyCanvas(topography, grid);
 	
-		if (showWork) {
+		if (highContrast) {
 			view.addLayer("WORK");
 			
 			for (int y=0;y<grid.height;y++) { 
