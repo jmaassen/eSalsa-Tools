@@ -20,7 +20,7 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 /**
- * An iterator for Blocks. 
+ * An iterator for Blocks.
  * 
  * @author Jason Maassen <J.Maassen@esciencecenter.nl>
  * @version 1.0
@@ -30,52 +30,53 @@ import java.util.NoSuchElementException;
  */
 public class BlockIterator implements Iterator<Block> {
 
-	/** The blocks to iterate over. */
-	private final Block [] blocks;
-	
-	/** The index of the next block to return. */
-	private int index;
-	
-	/** 
-	 * Creates a BlockIterator that will iterate over the {@link Block}s in provided array.    
-	 * 
-	 * @param blocks an array of blocks to iterate over. 
-	 */
-	public BlockIterator(Block [] blocks) { 	
-		this.blocks = blocks;
-		this.index = 0;		
-	}
-	
-	@Override
-	public boolean hasNext() {
-		
-		if (blocks == null || index >= blocks.length) { 
-			return false;
-		}
-		
-		while (blocks[index] == null) { 
-			index++;
+    /** The blocks to iterate over. */
+    private final Block[] blocks;
 
-			if (index >= blocks.length) { 
-				return false;
-			}	
-		}
-		
-		return true;
-	}
+    /** The index of the next block to return. */
+    private int index;
 
-	@Override
-	public Block next() {
-		
-		if (hasNext()) { 
-			return blocks[index++];
-		}
-		
-		throw new NoSuchElementException("ElementIterator ran out of elements!");
-	}
+    /**
+     * Creates a BlockIterator that will iterate over the {@link Block}s in provided array.
+     * 
+     * @param blocks
+     *            an array of blocks to iterate over.
+     */
+    public BlockIterator(Block[] blocks) {
+        this.blocks = blocks;
+        this.index = 0;
+    }
 
-	@Override
-	public void remove() {
-		throw new UnsupportedOperationException("Remove not supported!");
-	} 		
+    @Override
+    public boolean hasNext() {
+
+        if (blocks == null || index >= blocks.length) {
+            return false;
+        }
+
+        while (blocks[index] == null) {
+            index++;
+
+            if (index >= blocks.length) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    @Override
+    public Block next() {
+
+        if (hasNext()) {
+            return blocks[index++];
+        }
+
+        throw new NoSuchElementException("ElementIterator ran out of elements!");
+    }
+
+    @Override
+    public void remove() {
+        throw new UnsupportedOperationException("Remove not supported!");
+    }
 }

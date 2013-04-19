@@ -19,52 +19,53 @@ package nl.esciencecenter.esalsa.tools;
 import nl.esciencecenter.esalsa.util.Distribution;
 
 /**
- * DistributionToText is an application that converts a POP distribution from the binary format used in POP itself to an 
- * ASCI text representation.   
- *  
+ * DistributionToText is an application that converts a POP distribution from the binary format used in POP itself to an ASCI text
+ * representation.
+ * 
  * @author Jason Maassen <J.Maassen@esciencecenter.nl>
  * @version 1.0
  * @since 1.0
  */
 public class DistributionToText {
 
-	/** 
-	 * Main entry point into application. 
-	 * 
-	 * @param args the command line arguments provided by the user. 
-	 */
-	public static void main(String [] args) { 
-		
-		if (args.length != 1) { 			
-			System.err.println("Usage: DistributionToText [distribution file]");
-			System.exit(1);
-		}
-		
-		Distribution d = null;
-		
-		try { 
-			d = new Distribution(args[0]);
-		} catch (Exception e) { 
-			Utils.fatal("Failed to open ditribution " + args[0] + "\n", e);
-		} 
+    /**
+     * Main entry point into application.
+     * 
+     * @param args
+     *            the command line arguments provided by the user.
+     */
+    public static void main(String[] args) {
 
-		System.out.println(d.topographyWidth);
-		System.out.println(d.topographyHeight);
+        if (args.length != 1) {
+            System.err.println("Usage: DistributionToText [distribution file]");
+            System.exit(1);
+        }
 
-		System.out.println(d.blockWidth);
-		System.out.println(d.blockHeight);
+        Distribution d = null;
 
-		System.out.println(d.clusters);
-		System.out.println(d.nodesPerCluster);
-		System.out.println(d.coresPerNode);
+        try {
+            d = new Distribution(args[0]);
+        } catch (Exception e) {
+            Utils.fatal("Failed to open ditribution " + args[0] + "\n", e);
+        }
 
-		System.out.println(d.minBlocksPerCore);
-		System.out.println(d.maxBlocksPerCore);
+        System.out.println(d.topographyWidth);
+        System.out.println(d.topographyHeight);
 
-		System.out.println(d.totalBlocks);
+        System.out.println(d.blockWidth);
+        System.out.println(d.blockHeight);
 
-		for (int i=0;i<d.totalBlocks;i++) { 
-			System.out.println(d.getOwner(i));
-		}
-	}
+        System.out.println(d.clusters);
+        System.out.println(d.nodesPerCluster);
+        System.out.println(d.coresPerNode);
+
+        System.out.println(d.minBlocksPerCore);
+        System.out.println(d.maxBlocksPerCore);
+
+        System.out.println(d.totalBlocks);
+
+        for (int i = 0; i < d.totalBlocks; i++) {
+            System.out.println(d.getOwner(i));
+        }
+    }
 }

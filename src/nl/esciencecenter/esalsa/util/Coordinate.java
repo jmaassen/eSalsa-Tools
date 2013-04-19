@@ -18,7 +18,7 @@ package nl.esciencecenter.esalsa.util;
 
 /**
  * Coordinate represents a location in (x,y) coordinate space, specified in integer precision.
- *
+ * 
  * @author Jason Maassen <J.Maassen@esciencecenter.nl>
  * @version 1.0
  * @since 1.0
@@ -26,55 +26,59 @@ package nl.esciencecenter.esalsa.util;
  */
 public class Coordinate {
 
-	/** The x coordinate. */
-	public final int x;
-	
-	/** The y coordinate. */
-	public final int y;
-	
-	/** 
-	 * Create a new Coordinate representing the specified (x,y) location. 
-	 * 
-	 * @param x the x coordinate.
-	 * @param y the y coordinate.
-	 */
-	public Coordinate(int x, int y) { 
-		this.x = x;
-		this.y = y;
-	}
+    /** The x coordinate. */
+    public final int x;
 
-	/** 
-	 * Create a new Coordinate by adding an offset to the current coordinate. 
-	 * 
-	 * @param dx the x offset to add.
-	 * @param dy the y offset to add. 
-	 * @return a new Coordinate containing the current location plus the offsets. 
-	 */
-	public Coordinate offset(int dx, int dy) { 
-		return new Coordinate(x+dx, y+dy);
-	}
-	
-	@Override
-	public int hashCode() {
-		return x + y * 31;
-	}
+    /** The y coordinate. */
+    public final int y;
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj) {
-			return true;
-		}
-		
-		if (obj == null || getClass() != obj.getClass()) {
-			return false;
-		}
-			
-		Coordinate other = (Coordinate) obj;
-		return x == other.x && y == other.y;
-	}
+    /**
+     * Create a new Coordinate representing the specified (x,y) location.
+     * 
+     * @param x
+     *            the x coordinate.
+     * @param y
+     *            the y coordinate.
+     */
+    public Coordinate(int x, int y) {
+        this.x = x;
+        this.y = y;
+    }
 
-	@Override
-	public String toString() {
-		return "(" + x + ", " + y + ")";
-	}	
+    /**
+     * Create a new Coordinate by adding an offset to the current coordinate.
+     * 
+     * @param dx
+     *            the x offset to add.
+     * @param dy
+     *            the y offset to add.
+     * @return a new Coordinate containing the current location plus the offsets.
+     */
+    public Coordinate offset(int dx, int dy) {
+        return new Coordinate(x + dx, y + dy);
+    }
+
+    @Override
+    public int hashCode() {
+        return x + y * 31;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+
+        Coordinate other = (Coordinate) obj;
+        return x == other.x && y == other.y;
+    }
+
+    @Override
+    public String toString() {
+        return "(" + x + ", " + y + ")";
+    }
 }

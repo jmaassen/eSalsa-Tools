@@ -20,38 +20,40 @@ import java.util.Collection;
 import nl.esciencecenter.esalsa.util.Set;
 
 /**
- * A Split is an abstract parent class of all splitters. 
+ * A Split is an abstract parent class of all splitters.
  * 
- * A splitter is capable of splitting a set of blocks into a specified number of subsets. 
- * See {@link #split(Collection)} for details.
+ * A splitter is capable of splitting a set of blocks into a specified number of subsets. See {@link #split(Collection)} for
+ * details.
  * 
  * @author Jason Maassen <J.Maassen@esciencecenter.nl>
  * @version 1.0
  * @since 1.0
  */
 public abstract class Split {
-	
-	/** The set to split */
-	protected final Set set;
-	
-	/** The number of subsets to create. */
-	protected final int parts;
-	
-	/**
-	 * Create a Split for the given set. 
-	 * 
-	 * @param set the set to split.
-	 * @param subsets the number of subsets to split the set into. 
-	 */
-	protected Split(Set set, int subsets) { 
-		this.set = set;
-		this.parts = subsets;
-	}
-	
-	/**
-	 * Perform the split of the set into subsets and store these in the provided Collection.
-	 *  
-	 * @param result
-	 */
-	public abstract void split(Collection<Set> result);
+
+    /** The set to split */
+    protected final Set set;
+
+    /** The number of subsets to create. */
+    protected final int parts;
+
+    /**
+     * Create a Split for the given set.
+     * 
+     * @param set
+     *            the set to split.
+     * @param subsets
+     *            the number of subsets to split the set into.
+     */
+    protected Split(Set set, int subsets) {
+        this.set = set;
+        this.parts = subsets;
+    }
+
+    /**
+     * Perform the split of the set into subsets and store these in the provided Collection.
+     * 
+     * @param result
+     */
+    public abstract void split(Collection<Set> result);
 }

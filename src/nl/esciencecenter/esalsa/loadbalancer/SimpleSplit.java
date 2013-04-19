@@ -23,8 +23,8 @@ import nl.esciencecenter.esalsa.util.Block;
 import nl.esciencecenter.esalsa.util.Set;
 
 /**
- * A SimpleSplit is capable of splitting a set of blocks into a specified number of subsets that are arranged in a roughly 
- * linear fashion. See {@link #split(Collection)} for details.
+ * A SimpleSplit is capable of splitting a set of blocks into a specified number of subsets that are arranged in a roughly linear
+ * fashion. See {@link #split(Collection)} for details.
  * 
  * @author Jason Maassen <J.Maassen@esciencecenter.nl>
  * @version 1.0
@@ -33,158 +33,165 @@ import nl.esciencecenter.esalsa.util.Set;
  */
 public class SimpleSplit extends Split {
 
-	/** The sizes of each of the subsets. */
-	private final int [] targetWork;
-		
-	/** 
-	 * Create a SimpleSplit that will split the <code>set</code> into <code>subsets</code> parts.
-	 * 
-	 * @param set the set to split.
-	 * @param subsets the number of subsets to create.
-	 */
-	public SimpleSplit(Set set, int subsets) { 
-	
-		super(set, subsets);
-		
-		targetWork = new int[subsets];
-		
-		if (set.size() < subsets) { 
-			throw new IllegalArgumentException("Cannot split set with " + set.size() + " work into " + subsets + " parts!");
-		}
-		
-		int div = set.size() / subsets;
-		int mod = set.size() % subsets;
-		
-		for (int i=0;i<subsets;i++) { 
-			targetWork[i] = div;
-			
-			if (i < mod) { 
-				targetWork[i]++;
-			}
-		}
-	}
-	
-	/** 
-	 * Splits a set into <code>targetWork.length</code> subsets, such that subset <code>i</code> contains 
-	 * <code>targetWork[i]</code> work. 
-	 * <p>
-	 * The split is performed by traversing horizontally over the source set, moving from bottom to top in a zigzag pattern.  
-	 *  
-	 * @param s the set to split. 
-	 * @param targetWork an array containing the number of block for each subset. 
-	 */
-	private void zigzagHorizontal(Collection<Set> result) { 
+    /** The sizes of each of the subsets. */
+    private final int[] targetWork;
 
-		int index = 0;
-		
-		ArrayList<Block> tmp = new ArrayList<Block>();
-	
-		// start bottom left and zigzag horizontally 
-		// until we reach top right.
-		for (int y=set.minY;y<=set.maxY;y++) { 
-			if (y % 2 == 0) { 
-				// left to right
-				for (int x=set.minX;x<=set.maxX;x++) { 
+    /**
+     * Create a SimpleSplit that will split the <code>set</code> into <code>subsets</code> parts.
+     * 
+     * @param set
+     *            the set to split.
+     * @param subsets
+     *            the number of subsets to create.
+     */
+    public SimpleSplit(Set set, int subsets) {
 
-					Block b = set.get(x, y);
+        super(set, subsets);
 
-					if (b != null) { 
-						tmp.add(b);
+        targetWork = new int[subsets];
 
-						if (tmp.size() == targetWork[index]) { 
-							result.add(new Set(tmp, index));
-							tmp.clear();
-							index++;
-						}
-					}	
-				}
-			} else { 
-				// right to left
-				for (int x=set.maxX;x>=set.minX;x--) { 
+        if (set.size() < subsets) {
+            throw new IllegalArgumentException("Cannot split set with " + set.size() + " work into " + subsets + " parts!");
+        }
 
-					Block b = set.get(x, y);
+        int div = set.size() / subsets;
+        int mod = set.size() % subsets;
 
-					if (b != null) { 
-						tmp.add(b);
+        for (int i = 0; i < subsets; i++) {
+            targetWork[i] = div;
 
-						if (tmp.size() == targetWork[index]) { 
-							result.add(new Set(tmp, index));
-							tmp.clear();
-							index++;
-						}
-					}	
-				}
-			}
-		}
-	}
+            if (i < mod) {
+                targetWork[i]++;
+            }
+        }
+    }
 
-	/** 
-	 * Splits the set into <code>targetWork.length</code> subsets, such that subset <code>i</code> contains 
-	 * <code>targetWork[i]</code> work. 
-	 * <p>
-	 * The split is performed by traversing vertically over the source set, left to right up in a zigzag pattern.  
-	 *  
-	 * @param s the set to split. 
-	 * @param targetWork an array containing the number of block for each subset. 
-	 */
-	private void zigzagVertical(Collection<Set> result) { 
+    /**
+     * Splits a set into <code>targetWork.length</code> subsets, such that subset <code>i</code> contains
+     * <code>targetWork[i]</code> work.
+     * <p>
+     * The split is performed by traversing horizontally over the source set, moving from bottom to top in a zigzag pattern.
+     * 
+     * @param s
+     *            the set to split.
+     * @param targetWork
+     *            an array containing the number of block for each subset.
+     */
+    private void zigzagHorizontal(Collection<Set> result) {
 
-		int index = 0;
-		
-		ArrayList<Block> tmp = new ArrayList<Block>();
-	
-		for (int x=set.minX;x<=set.maxX;x++) { 
-			if (x % 2 == 0) { 
-				// top to bottom
-				for (int y=set.minY;y<=set.maxY;y++) { 
+        int index = 0;
 
-					Block b = set.get(x, y);
+        ArrayList<Block> tmp = new ArrayList<Block>();
 
-					if (b != null) { 
-						tmp.add(b);
+        // start bottom left and zigzag horizontally 
+        // until we reach top right.
+        for (int y = set.minY; y <= set.maxY; y++) {
+            if (y % 2 == 0) {
+                // left to right
+                for (int x = set.minX; x <= set.maxX; x++) {
 
-						if (tmp.size() == targetWork[index]) { 
-							result.add(new Set(tmp, index));
-							tmp.clear();
-							index++;
-						}
-					}	
-				}
-			} else { 
-				// right to left
-				for (int y=set.maxY;y>=set.minY;y--) { 
+                    Block b = set.get(x, y);
 
-					Block b = set.get(x, y);
+                    if (b != null) {
+                        tmp.add(b);
 
-					if (b != null) { 
-						tmp.add(b);
+                        if (tmp.size() == targetWork[index]) {
+                            result.add(new Set(tmp, index));
+                            tmp.clear();
+                            index++;
+                        }
+                    }
+                }
+            } else {
+                // right to left
+                for (int x = set.maxX; x >= set.minX; x--) {
 
-						if (tmp.size() == targetWork[index]) { 
-							result.add(new Set(tmp, index));
-							tmp.clear();
-							index++;
-						}
-					}	
-				}
-			}
-		}
-	}
-	
-	/**
-	 * Perform the split of the set into subsets and store these in the provided Collection.
-	 * <p>
-	 * Set is split into subsets in a linear fashion (resulting in a 1xN or Nx1 division). If the set is wider that it is high,  
-     * it will be split horizontally (Nx1), if it is higher than it is wide, it will be split vertically (1xN).   
-	 * 
-	 * @param result the Collection to store the result in. 
-	 */
-	@Override
-	public void split(Collection<Set> result) { 
-	
-		if (set.getWidth() < set.getHeight()) { 
-			zigzagHorizontal(result);
-		} else { 
-			zigzagVertical(result);
-		}
-	}
+                    Block b = set.get(x, y);
+
+                    if (b != null) {
+                        tmp.add(b);
+
+                        if (tmp.size() == targetWork[index]) {
+                            result.add(new Set(tmp, index));
+                            tmp.clear();
+                            index++;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * Splits the set into <code>targetWork.length</code> subsets, such that subset <code>i</code> contains
+     * <code>targetWork[i]</code> work.
+     * <p>
+     * The split is performed by traversing vertically over the source set, left to right up in a zigzag pattern.
+     * 
+     * @param s
+     *            the set to split.
+     * @param targetWork
+     *            an array containing the number of block for each subset.
+     */
+    private void zigzagVertical(Collection<Set> result) {
+
+        int index = 0;
+
+        ArrayList<Block> tmp = new ArrayList<Block>();
+
+        for (int x = set.minX; x <= set.maxX; x++) {
+            if (x % 2 == 0) {
+                // top to bottom
+                for (int y = set.minY; y <= set.maxY; y++) {
+
+                    Block b = set.get(x, y);
+
+                    if (b != null) {
+                        tmp.add(b);
+
+                        if (tmp.size() == targetWork[index]) {
+                            result.add(new Set(tmp, index));
+                            tmp.clear();
+                            index++;
+                        }
+                    }
+                }
+            } else {
+                // right to left
+                for (int y = set.maxY; y >= set.minY; y--) {
+
+                    Block b = set.get(x, y);
+
+                    if (b != null) {
+                        tmp.add(b);
+
+                        if (tmp.size() == targetWork[index]) {
+                            result.add(new Set(tmp, index));
+                            tmp.clear();
+                            index++;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * Perform the split of the set into subsets and store these in the provided Collection.
+     * <p>
+     * Set is split into subsets in a linear fashion (resulting in a 1xN or Nx1 division). If the set is wider that it is high, it
+     * will be split horizontally (Nx1), if it is higher than it is wide, it will be split vertically (1xN).
+     * 
+     * @param result
+     *            the Collection to store the result in.
+     */
+    @Override
+    public void split(Collection<Set> result) {
+
+        if (set.getWidth() < set.getHeight()) {
+            zigzagHorizontal(result);
+        } else {
+            zigzagVertical(result);
+        }
+    }
 }

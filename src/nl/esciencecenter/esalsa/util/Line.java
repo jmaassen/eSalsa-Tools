@@ -17,55 +17,57 @@
 package nl.esciencecenter.esalsa.util;
 
 /**
- * Line represents a line between two coordinates. 
+ * Line represents a line between two coordinates.
  * 
  * @author Jason Maassen <J.Maassen@esciencecenter.nl>
  * @version 1.0
  * @since 1.0
- * @see Coordinate 
- *
+ * @see Coordinate
+ * 
  */
 public class Line {
-	
-	/** The start of the line. */
-	public final Coordinate start;
-	
-	/** The end of the line. */
-	public final Coordinate end;
-	
-	/** 
-	 * Creates a new Line between the two specified coordinates.
-	 * 
-	 * @param start the start of the line.
-	 * @param end the end of the line.
-	 */	
-	public Line(Coordinate start, Coordinate end) {
-		
-		if (start == null || end == null) { 
-			throw new IllegalArgumentException("Coordinates in a line cannot be null!");
-		}
-		
-		this.start = start;
-		this.end = end;
-	}
 
-	@Override
-	public int hashCode() {
-		return start.hashCode() + end.hashCode();
-	}
+    /** The start of the line. */
+    public final Coordinate start;
 
-	@Override
-	public boolean equals(Object obj) {
+    /** The end of the line. */
+    public final Coordinate end;
 
-		if (this == obj) { 
-			return true;
-		}
-		
-		if (obj == null || getClass() != obj.getClass()) { 
-			return false;
-		}
-		
-		Line other = (Line) obj;
-		return (start.equals(other.start) && end.equals(other.end)) || (start.equals(other.end) && end.equals(other.start)); 
-	}	
+    /**
+     * Creates a new Line between the two specified coordinates.
+     * 
+     * @param start
+     *            the start of the line.
+     * @param end
+     *            the end of the line.
+     */
+    public Line(Coordinate start, Coordinate end) {
+
+        if (start == null || end == null) {
+            throw new IllegalArgumentException("Coordinates in a line cannot be null!");
+        }
+
+        this.start = start;
+        this.end = end;
+    }
+
+    @Override
+    public int hashCode() {
+        return start.hashCode() + end.hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+
+        if (this == obj) {
+            return true;
+        }
+
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+
+        Line other = (Line) obj;
+        return (start.equals(other.start) && end.equals(other.end)) || (start.equals(other.end) && end.equals(other.start));
+    }
 }

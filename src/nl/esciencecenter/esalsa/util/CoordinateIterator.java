@@ -20,7 +20,7 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 /**
- * An iterator for Coordinates. 
+ * An iterator for Coordinates.
  * 
  * @author Jason Maassen <J.Maassen@esciencecenter.nl>
  * @version 1.0
@@ -30,39 +30,40 @@ import java.util.NoSuchElementException;
  */
 public class CoordinateIterator implements Iterator<Coordinate> {
 
-	/** The Coordinates to iterate over. */
-	private final Coordinate [] coordinates;
-	
-	/** The index of the next Coordinate to return. */
-	private int index;
-	
-	/** 
-	 * Creates a CoordinateIterator that will iterate over the {@link Coordinate}s in the provided array.    
-	 * 
-	 * @param coordinates an array of Coordinates to iterate over. 
-	 */
-	public CoordinateIterator(Coordinate [] coordinates) { 	
-		this.coordinates = coordinates;
-		this.index = 0;		
-	}
-	
-	@Override
-	public boolean hasNext() {
-		return (index < coordinates.length); 
-	}
+    /** The Coordinates to iterate over. */
+    private final Coordinate[] coordinates;
 
-	@Override
-	public Coordinate next() {
-		
-		if (index < coordinates.length) { 
-			return coordinates[index++];
-		}
+    /** The index of the next Coordinate to return. */
+    private int index;
 
-		throw new NoSuchElementException("Iterator ran out of elements!");
-	}
+    /**
+     * Creates a CoordinateIterator that will iterate over the {@link Coordinate}s in the provided array.
+     * 
+     * @param coordinates
+     *            an array of Coordinates to iterate over.
+     */
+    public CoordinateIterator(Coordinate[] coordinates) {
+        this.coordinates = coordinates;
+        this.index = 0;
+    }
 
-	@Override
-	public void remove() {
-		throw new UnsupportedOperationException("Remove not supported!");
-	} 		
+    @Override
+    public boolean hasNext() {
+        return (index < coordinates.length);
+    }
+
+    @Override
+    public Coordinate next() {
+
+        if (index < coordinates.length) {
+            return coordinates[index++];
+        }
+
+        throw new NoSuchElementException("Iterator ran out of elements!");
+    }
+
+    @Override
+    public void remove() {
+        throw new UnsupportedOperationException("Remove not supported!");
+    }
 }

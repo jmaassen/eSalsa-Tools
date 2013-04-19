@@ -19,7 +19,6 @@ import java.io.PrintStream;
 
 import nl.esciencecenter.esalsa.util.Layer;
 import nl.esciencecenter.esalsa.util.Layers;
-import nl.esciencecenter.esalsa.util.Neighbours;
 import nl.esciencecenter.esalsa.util.Set;
 
 /**
@@ -33,61 +32,62 @@ import nl.esciencecenter.esalsa.util.Set;
  */
 public class Statistics {
 
-	private final Layers layers;
-	private final Neighbours neighbours;
-	
-	/**
-	 * Create a Statistics for a given set of layers.
-	 * 
-	 * @param layers the layer for which the statistics must be printed.
-	 * @param neighbours the neighbour function to use.
-	 */
-	public Statistics(Layers layers, Neighbours neighbours) { 
-		this.layers = layers;
-		this.neighbours = neighbours;
-	}
-	
-	/** 
-	 * Print statistics on work distribution and communication in <code>layer</code> to console. 
-	 *   
-	 * @param layer the layer to print statistics for. 
-	 */
-	private void printStatistics(Layer layer, PrintStream output) { 
-		
-		if (layer == null) { 
-			return;
-		}
+    private final Layers layers;
 
-		output.println("Statistics for layer: " + layer.name);		
-		output.println("  Sets: " + layer.size());
-	
-		for (int i=0;i<layer.size();i++) { 
-			Set tmp = layer.get(i);			
-			// output.println("   " + i + " (" + tmp.minX + "," + tmp.minY + ") - (" + tmp.maxX + "," + tmp.maxY + ") " + 
-			output.println("   " + i + " " + tmp.size() + " " + tmp.getCommunication(neighbours));
-		}
-	}
+    /**
+     * Create a Statistics for a given set of layers.
+     * 
+     * @param layers
+     *            the layer for which the statistics must be printed.
+     */
+    public Statistics(Layers layers) {
+        this.layers = layers;
+    }
 
-	/** 
-	 * Print statistics on work distribution and communication in <code>layer</code> to the provided print stream. 
-	 *   
-	 * @param layer the name of the layer to print statistics for, or <code>ALL</code> to print statistics on all layers.  
-	 * @param output the stream to print the statistics to.  
-	 */
-	public void printStatistics(String layer, PrintStream output) throws Exception {
-		
-		if (layer.equalsIgnoreCase("ALL")) { 
-			printStatistics(layers.get("CLUSTERS"), output);
-			printStatistics(layers.get("NODES"), output);
-			printStatistics(layers.get("CORES"), output);
-		} else { 
-			Layer l = layers.get(layer);
+    /**
+     * Print statistics on work distribution and communication in <code>layer</code> to console.
+     * 
+     * @param layer
+     *            the layer to print statistics for.
+     */
+    private void printStatistics(Layer layer, PrintStream output) {
 
-			if (l == null) { 
-				throw new Exception("Layer " + layer + " not found!");
-			}
-			
-			printStatistics(l, output);
-		}
-	}	
+        if (layer == null) {
+            return;
+        }
+
+        output.println("Statistics for layer: " + layer.name);
+        output.println("  Sets: " + layer.size());
+
+        for (int i = 0; i < layer.size(); i++) {
+            Set tmp = layer.get(i);
+            // output.println("   " + i + " (" + tmp.minX + "," + tmp.minY + ") - (" + tmp.maxX + "," + tmp.maxY + ") " + 
+            output.println("   " + i + " " + tmp.size() + " " + tmp.getCommunication());
+        }
+    }
+
+    /**
+     * Print statistics on work distribution and communication in <code>layer</code> to the provided print stream.
+     * 
+     * @param layer
+     *            the name of the layer to print statistics for, or <code>ALL</code> to print statistics on all layers.
+     * @param output
+     *            the stream to print the statistics to.
+     */
+    public void printStatistics(String layer, PrintStream output) throws Exception {
+
+        if (layer.equalsIgnoreCase("ALL")) {
+            printStatistics(layers.get("CLUSTERS"), output);
+            printStatistics(layers.get("NODES"), output);
+            printStatistics(layers.get("CORES"), output);
+        } else {
+            Layer l = layers.get(layer);
+
+            if (l == null) {
+                throw new Exception("Layer " + layer + " not found!");
+            }
+
+            printStatistics(l, output);
+        }
+    }
 }

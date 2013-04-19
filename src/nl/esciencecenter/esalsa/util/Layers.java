@@ -21,9 +21,9 @@ import java.util.HashMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/** 
- * Layers provides a simple storage class for a collection of layers. A layer can be retrieved using its name. 
- *  
+/**
+ * Layers provides a simple storage class for a collection of layers. A layer can be retrieved using its name.
+ * 
  * @author Jason Maassen <J.Maassen@esciencecenter.nl>
  * @version 1.0
  * @since 1.0
@@ -32,78 +32,80 @@ import org.slf4j.LoggerFactory;
  */
 public class Layers {
 
-	private static final Logger logger = LoggerFactory.getLogger(Layers.class);
-	
-	private final HashMap<String, Layer> layers = new HashMap<String, Layer>();
+    private static final Logger logger = LoggerFactory.getLogger(Layers.class);
 
-	/**
-	 * Add a Layer. 
-	 * 
-	 * @param layer the Layer to add.
-	 */
-	public void add(Layer layer) {
-		
-		if (logger.isDebugEnabled()) { 
-			logger.debug("Add layer " + layer.name + " with " + layer.size() + " elements at layer: " + layers.size());
-		}
+    private final HashMap<String, Layer> layers = new HashMap<String, Layer>();
 
-		layers.put(layer.name, layer);
-	}
-	
-	/** 
-	 * Retrieve a Layer with a certain name.
-	 * 
-	 * @param name the name of the Layer to retrieve.
-	 * @return the Layer requested, or null if the Layer does not exist.
-	 */
-	public Layer get(String name) { 
+    /**
+     * Add a Layer.
+     * 
+     * @param layer
+     *            the Layer to add.
+     */
+    public void add(Layer layer) {
 
-		if (logger.isDebugEnabled()) { 
-			logger.debug("Get layer " + name);
-		}
-		
-		if (name == null) { 
-			throw new IllegalArgumentException("A layer name must be provided!");
-		} 
+        if (logger.isDebugEnabled()) {
+            logger.debug("Add layer " + layer.name + " with " + layer.size() + " elements at layer: " + layers.size());
+        }
 
-		return layers.get(name);
-	}
-	
-	/** 
-	 * Check if a layer with a certain name exists.
-	 * 
-	 * @param name the name of the layer to check.
-	 * @return true if a layer with the provided name exists, false otherwise.
-	 */	
-	public boolean contains(String name) { 
+        layers.put(layer.name, layer);
+    }
 
-		if (layers.size() == 0) { 
-			return false;
-		}
-		
-		if (name == null) { 
-			throw new IllegalArgumentException("A layer name must be provided!");
-		} 
+    /**
+     * Retrieve a Layer with a certain name.
+     * 
+     * @param name
+     *            the name of the Layer to retrieve.
+     * @return the Layer requested, or null if the Layer does not exist.
+     */
+    public Layer get(String name) {
 
-		return layers.containsKey(name);
-	}
+        if (logger.isDebugEnabled()) {
+            logger.debug("Get layer " + name);
+        }
 
-	/** 
-	 * Returns the number of available layer. 
-	 * 
-	 * @return the number of available layers.
-	 */
-	public int size() { 
-		return layers.size();
-	}
+        if (name == null) {
+            throw new IllegalArgumentException("A layer name must be provided!");
+        }
 
-	/** 
-	 * Returns the names of all layers currently stored.
-	 * 
-	 * @return an array containing the names of all layers. 
-	 * The name of layer N will be stored at position N in the array. 
-	 */
-	public String [] listLayers() { 
-		return layers.keySet().toArray(new String[layers.size()]);
-	}
+        return layers.get(name);
+    }
+
+    /**
+     * Check if a layer with a certain name exists.
+     * 
+     * @param name
+     *            the name of the layer to check.
+     * @return true if a layer with the provided name exists, false otherwise.
+     */
+    public boolean contains(String name) {
+
+        if (layers.size() == 0) {
+            return false;
+        }
+
+        if (name == null) {
+            throw new IllegalArgumentException("A layer name must be provided!");
+        }
+
+        return layers.containsKey(name);
+    }
+
+    /**
+     * Returns the number of available layer.
+     * 
+     * @return the number of available layers.
+     */
+    public int size() {
+        return layers.size();
+    }
+
+    /**
+     * Returns the names of all layers currently stored.
+     * 
+     * @return an array containing the names of all layers. The name of layer N will be stored at position N in the array.
+     */
+    public String[] listLayers() {
+        return layers.keySet().toArray(new String[layers.size()]);
+    }
 }

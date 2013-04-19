@@ -24,45 +24,49 @@ import nl.esciencecenter.esalsa.util.Topography;
 
 /**
  * PrintStatistics is an application that prints information about a given POP distribution.
- *  
+ * 
  * @author Jason Maassen <J.Maassen@esciencecenter.nl>
  * @version 1.0
  * @since 1.0
  */
 public class PrintStatistics {
-	
-	/**
-	 * Main entry point into the application.
-	 *  
-	 * @param args the command line arguments.
-	 */
-	public static void main(String [] args) { 
 
-		if (args.length < 3) { 			
-			System.out.println("Usage: PrintStatistics topography_file distribution_file statistics_name\n" + 
-					"\n" + 
-					"Read a topography file and work distribution file and print statistics on the work distribution and " + 
-					"communication per cluster, node or core.\n" + 
-					"\n" + 
-					"  topography_file    a topography file that contains the index of the deepest ocean level at " + 
-					"each gridpoint.\n" + 
-					"  distribution_file  a work distribution file.\n" + 
-					"  statistics_name    name of the statistics to print. Valid values are CLUSTER, NODE, CORE, ALL.");
-			
-			System.exit(1);
-		}
-		
-		try { 			
-			Distribution d = new Distribution(args[1]);			
-			Topography t = new Topography(d.topographyWidth, d.topographyHeight, args[0]);
-			Grid g = new Grid(t, d.blockWidth, d.blockHeight);
-			Neighbours n = new Neighbours(g, d.blockWidth, d.blockHeight, Neighbours.CYCLIC, Neighbours.TRIPOLE);
-		
-			Statistics s = new Statistics(d.toLayers(), n);
-			s.printStatistics(args[2], System.out);
-			
-		} catch (Exception e) {
-			Utils.fatal("Failed to print statistics!", e);
-		}
-	}
+    /**
+     * Main entry point into the application.
+     * 
+     * @param args
+     *            the command line arguments.
+     */
+    public static void main(String[] args) {
+
+        if (args.length < 3) {
+            System.out.println("Usage: PrintStatistics topography_file distribution_file statistics_name\n" + "\n"
+                    + "Read a topography file and work distribution file and print statistics on the work distribution and "
+                    + "communication per cluster, node or core.\n" + "\n"
+                    + "  topography_file    a topography file that contains the index of the deepest ocean level at "
+                    + "each gridpoint.\n" + "  distribution_file  a work distribution file.\n"
+                    + "  statistics_name    name of the statistics to print. Valid values are CLUSTER, NODE, CORE, ALL.");
+
+            System.exit(1);
+        }
+
+        try {
+            Distribution d = new Distribution(args[1]);
+            Topography t = new Topography(d.topographyWidth, d.topographyHeight, args[0]);
+            
+            int gridWidth = t.width / d.blockWidth;
+            int gridHeight = t.height / d.blockHeight;
+            
+            Neighbours n = new Neighbours(t, gridWidth, gridHeight, d.blockWidth, d.blockHeight, 
+                    Neighbours.CYCLIC, Neighbours.TRIPOLE);
+            
+            Grid g = new Grid(gridWidth, gridHeight, d.blockWidth, d.blockHeight, n);
+            
+            Statistics s = new Statistics(d.toLayers(g));
+            s.printStatistics(args[2], System.out);
+
+        } catch (Exception e) {
+            Utils.fatal("Failed to print statistics!", e);
+        }
+    }
 }
