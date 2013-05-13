@@ -70,7 +70,7 @@ public class Set implements Iterable<Block> {
             if (o1.blockID == o2.blockID) { 
                 return 0;
             }
-            
+
             Coordinate c1 = o1.coordinate;
             Coordinate c2 = o2.coordinate;
 
@@ -100,7 +100,7 @@ public class Set implements Iterable<Block> {
         blocks = new Block[] { block };
 
         Coordinate c = block.coordinate;
-        
+
         minX = maxX = c.x;
         minY = maxY = c.y;
     }
@@ -136,7 +136,7 @@ public class Set implements Iterable<Block> {
             Block block = this.blocks[i];
 
             Coordinate c = block.coordinate;
-            
+
             if (c.x < tmpMinX) {
                 tmpMinX = c.x;
             }
@@ -189,9 +189,9 @@ public class Set implements Iterable<Block> {
         for (int i = 0; i < this.blocks.length; i++) {
 
             Block block = this.blocks[i];
-            
+
             Coordinate c = block.coordinate;
-            
+
             if (c.x < tmpMinX) {
                 tmpMinX = c.x;
             }
@@ -233,22 +233,33 @@ public class Set implements Iterable<Block> {
         blocks = set.blocks.clone();
     }
 
+    
+    /**
+     * Retrieve the edges of this set, that is, an array of lines which mark edges between blocks which are part of this set and 
+     * blocks that are not.  
+     * 
+     * @return an array of Lines that together form the border between this set and its neighbors.      
+     */    
     public Line [] getEdges() { 
-        
+
         ArrayList<Line> result = new ArrayList<Line>();
-        
+
         for (Block b : blocks) {
             getEdges(b, result);
         }
-        
+
         return result.toArray(new Line[result.size()]);
     }
-    
+
     /**
-     * Determines if a block may be on the edge of the set, that is, it has neighbors that are not part of the set.
+     * Determines if a block may be on the edge of the set, that is, it has neighbors that are not part of the set. If so, one or
+     * more Lines are added to the <code>result</code> array that mark the edges between the block and these neighbors.  
      * 
      * @param b
      *            the block to check
+     * @param result
+     *            the output ArrayList in which to store the result.
+     *            
      * @return if the block may be on the edge of the set.
      */
     private void getEdges(Block b, ArrayList<Line> result) {
@@ -266,7 +277,7 @@ public class Set implements Iterable<Block> {
         if (neighbours[1][2] > 0 && !contains(neighbours[1][2])) {
             result.add(new Line(b.coordinate.offset(1, 0), b.coordinate.offset(1, 1)));
         }
-        
+
         if (b.coordinate.y == 0 || (neighbours[2][1] > 0 && !contains(neighbours[2][1]))) {
             result.add(new Line(b.coordinate, b.coordinate.offset(1, 0)));
         }
@@ -284,7 +295,7 @@ public class Set implements Iterable<Block> {
         for (int i = -1; i <= 1; i++) {
             for (int j = -1; j <= 1; j++) {
                 if (!(i == 0 && j == 0)) {
-                    
+
                     Coordinate c = b.coordinate;
 
                     int nx = c.x + i;
@@ -300,7 +311,7 @@ public class Set implements Iterable<Block> {
                 }
             }
         }
-        
+
         return false;
     }
 
@@ -310,7 +321,7 @@ public class Set implements Iterable<Block> {
      * @return the coordinates of the neighbor Blocks of this set.
      */
     public int[] getNeighbours() {
-        
+
         if (neighbours == null) {
 
             this.communication = 0;
@@ -318,36 +329,27 @@ public class Set implements Iterable<Block> {
             HashSet<Integer> result = new HashSet<Integer>();
 
             for (Block b : blocks) {
-            
+
                 if (onEdge(b)) {
 
                     int[][] neighbours = b.getNeighbours();
                     int[][] communication = b.getCommunication();
-                    
+
                     for (int y = 0; y < 3; y++) {
                         for (int x = 0; x < 3; x++) {
-
-                    /*        if (tmp[i][j] > 0) {
-
-                                if (!contains(tmp[i][j])) {
-                                    communication += b.getCommunication(i - 1, j - 1);
-                                    result.add(tmp[i][j]);
-                                }
-                     */           
-                       
-                                if (neighbours[y][x] > 0 && !contains(neighbours[y][x])) { 
-                                    this.communication += communication[y][x];
-                                    result.add(neighbours[y][x]);
-                                }
+                            if (neighbours[y][x] > 0 && !contains(neighbours[y][x])) { 
+                                this.communication += communication[y][x];
+                                result.add(neighbours[y][x]);
+                            }
                         }
                     }
                 }
             }
 
             neighbours = new int[result.size()];
-            
+
             int index = 0;
-            
+
             for (int tmp : result) { 
                 neighbours[index++] = tmp;
             }
@@ -417,9 +419,7 @@ public class Set implements Iterable<Block> {
      * @return if this set contains a block at the specified location.
      */
     public boolean contains(int x, int y) {
-        
-        // FIXME: Can this go faster ?
-        
+        // TODO: Can this go faster ?
         return (get(x, y) != null);
     }
 
@@ -438,11 +438,11 @@ public class Set implements Iterable<Block> {
                 return true;
             }
         }    
-        
+
         return false;
     }
 
-    
+
     /**
      * Retrieve the Block at location (x,y).
      * 
@@ -458,11 +458,11 @@ public class Set implements Iterable<Block> {
             return null;
         }
 
-        // FIXME: optimize!
+        // TODO: optimize?
         for (int i = 0; i < blocks.length; i++) {
-            
+
             Coordinate c = blocks[i].coordinate;
-            
+
             if (c.x == x && c.y == y) {
                 return blocks[i];
             }

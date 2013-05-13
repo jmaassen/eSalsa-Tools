@@ -226,43 +226,8 @@ public class SearchSplit extends RoughlyRectangularSplit {
                 tmp = splitVertical(set, work, true);
                 communication = getCommunicationSum(tmp);
                 solutions.add(new Solution(tmp, perm, communication));
-                                
-                // Set[] tmp = findBestSplitFourWays(set, work);
-                //int communication = getCommunicationSum(tmp);
-
-                //System.out.println("   RESULT: " + communication);
-                
-                //solutions.add(new Solution(tmp, perm, communication));
             }
         }
-
-//        return new Solution(best, bestPerm);
-
-        /*		
-        		System.out.println("Current = " + bestCommunication);
-        		
-        		for (int i=current+1;i<workPerSlice.length;i++) { 
-        		
-        			int [] permute = workPerSlice.clone();
-        			
-        			int swap = permute[current];
-        			permute[current] = permute[i];
-        			permute[i] = swap;
-        		
-        			System.out.println("Testing = " + Arrays.toString(permute));
-        			
-        			Set [] tmp = findBestSplitFourWays(set, permute);
-        			int tmpCommunication = getCommunication(best);
-        			
-        			if (tmpCommunication < bestCommunication) { 
-        				bestCommunication = tmpCommunication;
-        				best = tmp;
-        				
-        				System.out.println("Current = " + bestCommunication);					
-        			}
-        		}
-        		return best;
-        */
     }
 
     private int[] swap(int[] input, int i, int j) {
@@ -277,7 +242,6 @@ public class SearchSplit extends RoughlyRectangularSplit {
 
         if (start == input.length) {
             output.add(input.clone());
-            //System.out.println(Arrays.toString(input));
             return;
         }
 
@@ -299,8 +263,6 @@ public class SearchSplit extends RoughlyRectangularSplit {
         for (int i = 0; i < index.length; i++) {
             index[i] = i;
         }
-
-        // getPermutation(input, 0, output);
 
         getPermutation(index, 0, output);
     }

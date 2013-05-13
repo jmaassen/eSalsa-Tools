@@ -16,6 +16,22 @@
 
 package nl.esciencecenter.esalsa.util;
 
+/**
+ * OptimizeTopography can optimize a Topography by relocating blocks such that is becomes easier to find an optimal load balance.  
+ * 
+ * Currently OptimizeTopography is only capable of optimizing when a tripole grid is used. When using a tripole grid, additional 
+ * communication is required for blocks located at the top of the topography (i.e., the north pole).  OptimizeTopography optimizes
+ * by relocating all ocean points in the area roughly delimited by north-east Russia, Alaska and Canada to the area delimited by 
+ * Canada, Greenland, and Europe.     
+ *  
+ * @author Jason Maassen <J.Maassen@esciencecenter.nl>
+ * @version 1.1
+ * @since 1.1
+ * @see Topography
+ * @see Grid
+ * @see Neighbours
+ * 
+ */
 public class OptimizeTopography {
 
     private final Topography topology;
@@ -39,7 +55,7 @@ public class OptimizeTopography {
         return optGrid;
     }
 
-    public Topography createTopography(int index) throws Exception {
+    private Topography createTopography(int index) throws Exception {
 
         int topoHeight = (topology.height + (topology.height - index * grid.blockHeight));
 
@@ -76,7 +92,7 @@ public class OptimizeTopography {
         return new Topography(data);
     }
 
-    public Grid createGrid(int index) {
+    private Grid createGrid(int index) {
 
         System.out.println("Original Grid dimensions " + grid.width + "x" + grid.height);
         System.out.println("New Grid dimensions " + grid.width + "x" + (grid.height + (grid.height - index)));

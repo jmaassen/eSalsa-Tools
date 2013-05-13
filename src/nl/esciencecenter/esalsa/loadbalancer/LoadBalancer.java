@@ -437,45 +437,4 @@ public class LoadBalancer {
         return new Distribution(topographyWidth, topographyHeight, grid.blockWidth, grid.blockHeight, clusters, nodes, cores,
                 minBlocksPerCore, maxBlocksPerCore, grid.width * grid.height, result);
     }
-    
-    
-    // FIXME!
-//    public Distribution getDistribution(int gridWidth, int gridHeight, int topoWidth, int topoHeight) throws Exception {
-//
-//        Layer layer = layers.get("CORES");
-//
-//        if (layer == null || layer.size() != (cores * nodes * clusters)) {
-//            throw new Exception("INTERNAL ERROR: Failed to retrieve CORE layer with " + (cores * nodes * clusters) + " cores! ("
-//                    + (layer == null ? "NULL" : "" + layer.size()) + ")");
-//        }
-//        
-//        int[] result = new int[gridWidth * gridHeight];
-//        
-//        int maxBlocksPerCore = 0;
-//        int minBlocksPerCore = Integer.MAX_VALUE;
-//
-//        for (Set s : layer) {
-//
-//            int blocks = s.size();
-//
-//            if (blocks > maxBlocksPerCore) {
-//                maxBlocksPerCore = blocks;
-//            }
-//
-//            if (blocks < minBlocksPerCore) {
-//                minBlocksPerCore = blocks;
-//            }
-//
-//            for (Block b : s) {
-//
-//                if (b.blockID > 0) { 
-//                    Coordinate c = b.getOriginalCoordinate();
-//                    result[c.y * gridWidth + c.x] = b.getMark() + 1;
-//                }
-//            }
-//        }
-//
-//        return new Distribution(topoWidth, topoHeight, grid.blockWidth, grid.blockHeight, clusters, nodes, cores,
-//                minBlocksPerCore, maxBlocksPerCore, gridWidth * gridHeight, result);
-//    }
 }
