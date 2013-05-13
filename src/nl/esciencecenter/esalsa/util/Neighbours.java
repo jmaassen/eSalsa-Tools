@@ -99,6 +99,50 @@ public class Neighbours {
         this.messageSizeTripole = blockWidth * (HALOWIDTH + 1);
     }
 
+    public static int parseBoundaryX(String value) { 
+        
+        if (value != null) {
+            
+            if (value.equalsIgnoreCase("CLOSED")) { 
+                return CLOSED;
+            }
+            
+            if (value.equalsIgnoreCase("CYCLIC")) { 
+                return CYCLIC;
+            }
+        }    
+            
+        return -1;
+    }
+    
+    public static int parseBoundaryY(String value) { 
+
+        if (value != null) {
+
+            if (value.equalsIgnoreCase("CLOSED")) { 
+                return CLOSED;
+            }
+
+            if (value.equalsIgnoreCase("CYCLIC")) { 
+                return CYCLIC;
+            }
+
+            if (value.equalsIgnoreCase("TRIPOLE")) { 
+                return TRIPOLE;
+            }
+        }    
+
+        return -1;
+    }
+
+    public static String [] getValidBoundaryX() { 
+        return new String [] { "CLOSED", "CYCLIC" };
+    }
+
+    public static String [] getValidBoundaryY() { 
+        return new String [] { "CLOSED", "CYCLIC", "TRIPOLE" };
+    }
+    
     public boolean isOcean(int x, int y) {
         return topo.getRectangleWork(x * blockWidth, y * blockHeight, blockWidth, blockHeight) > 0;
     }

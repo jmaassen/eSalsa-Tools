@@ -57,6 +57,7 @@ public class PrintStatistics {
             int gridWidth = t.width / d.blockWidth;
             int gridHeight = t.height / d.blockHeight;
             
+            // FIXME!!!!
             Neighbours n = new Neighbours(t, gridWidth, gridHeight, d.blockWidth, d.blockHeight, 
                     Neighbours.CYCLIC, Neighbours.TRIPOLE);
             

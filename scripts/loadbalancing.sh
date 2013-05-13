@@ -13,6 +13,7 @@ fi
 exec java \
     -classpath "$ESALSA_HOME/lib/"'*' \
     -Dlog4j.configuration=file:"$IPL_HOME"/log4j.properties \
+    -Dorg.slf4j.simpleLogger.defaultLogLevel=TRACE \
     nl.esciencecenter.esalsa.tools.LoadBalancing \
     "$@"
 

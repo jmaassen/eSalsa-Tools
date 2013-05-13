@@ -69,17 +69,20 @@ public class SearchSplit extends RoughlyRectangularSplit {
         }
     }
 
-    private int getCommunication(Set[] sets) {
+    private int getCommunicationSum(Set[] sets) {
 
-        /*
-        
         int communication = 0;
 
         for (int i = 0; i < sets.length; i++) {
             communication += sets[i].getCommunication();
         }
-        */
         
+        return communication;
+    }
+
+    /*
+    private int getCommunicationMax(Set[] sets) {
+
         int max = 0;
 
         for (int i = 0; i < sets.length; i++) {
@@ -90,10 +93,11 @@ public class SearchSplit extends RoughlyRectangularSplit {
                 max = tmp;
             }
         }
-
+         
         return max;
     }
 
+/*    
     private Set[] findBestSplitFourWays(Set set, int[] workPerSlice) {
 
         // We now have 4 options here: >, <, ^, v
@@ -106,46 +110,61 @@ public class SearchSplit extends RoughlyRectangularSplit {
 
         // Now select the best of the four
         Set[] best = solutions[0];
-        int bestCommunication = getCommunication(solutions[0]);
-
+        int bestCommunication = getCommunicationSum(solutions[0]);
+        int bestMaxCommunication = getCommunicationMax(solutions[0]);
+        
         if (logger.isDebugEnabled()) {
             logger.debug("   solution[0] " + bestCommunication);
         }
 
+        System.out.println("Set best to " + 0);
+        System.out.println("   solution[0] " + bestCommunication + " " + bestMaxCommunication);
+        
         for (int i = 1; i < 4; i++) {
 
-            int tmp = getCommunication(solutions[i]);
-
+            int tmpSum = getCommunicationSum(solutions[i]);
+            int tmpMax = getCommunicationMax(solutions[i]);
+            
             if (logger.isDebugEnabled()) {
-                logger.debug("   solution[" + i + "] " + tmp);
+                logger.debug("   solution[" + i + "] " + tmpSum);
             }
 
-            if (tmp < bestCommunication) {
+            System.out.println("   solution[" + i + "] " + tmpSum + " " + tmpMax);
+
+            if (tmpSum < bestCommunication) {
                 best = solutions[i];
-                bestCommunication = tmp;
+                bestCommunication = tmpSum;
+                bestMaxCommunication = tmpMax;
+                
+                System.out.println("Set best to " + i);
+                
+            } else if (tmpSum == bestCommunication && tmpMax < bestMaxCommunication) {
+                best = solutions[i];
+                bestCommunication = tmpSum;
+                bestMaxCommunication = tmpMax;
+                
+                System.out.println("Set best to " + i);
+
             }
         }
 
         if (logger.isDebugEnabled()) {
             logger.debug("   best solution -- " + bestCommunication);
         }
+        
+        System.out.println("   best solution -- " + bestCommunication + "  " + bestMaxCommunication);
 
         return best;
     }
-
+*/
+    
     @SuppressWarnings("rawtypes")
     private void findBestSplit(Set set, int[] workPerSlice, Collection<Solution> solutions) {
-
-//        Set[] best = null;
-//        int[] bestPerm = null;
-//        int bestCommunication = Integer.MAX_VALUE;
 
         // We should test all permutations of workPerSlice here.
         ArrayList permutations = new ArrayList();
         getIndexPermutations(workPerSlice.length, permutations);
         
-        // getPermutations(workPerSlice, permutations);
-
         System.out.println("Permutations generated: " + permutations.size());
         
         HashMap<Integer, ArrayList<int []>> cache = new HashMap<Integer, ArrayList<int []>>();
@@ -190,26 +209,30 @@ public class SearchSplit extends RoughlyRectangularSplit {
                     logger.debug(" TESTING: " + Arrays.toString(perm) + " " + Arrays.toString(work));
                 }
 
-                Set[] tmp = findBestSplitFourWays(set, work);
-                int communication = getCommunication(tmp);
-
-                System.out.println("TESTING: " + Arrays.toString(perm) + " " + Arrays.toString(work) + " " + communication);
-
-//                if (communication <= bestCommunication) {
-//                    best = tmp;
-//                    bestCommunication = communication;
-//                    bestPerm = perm;
-//
-//                    if (logger.isDebugEnabled()) {
-//                        logger.debug("+++ RESULT: " + Arrays.toString(perm) + " " + Arrays.toString(work) + " " + communication);
-//                    }
-//                } else {
-//                    if (logger.isDebugEnabled()) {
-//                        logger.debug("--- RESULT: " + Arrays.toString(perm) + " " + Arrays.toString(work) + " " + communication);
-//                    }
-//                }
-                
+                System.out.println("TESTING: " + Arrays.toString(perm) + " " + Arrays.toString(work));
+                                               
+                Set [] tmp = splitHorizontal(set, work, false);
+                int communication = getCommunicationSum(tmp);
                 solutions.add(new Solution(tmp, perm, communication));
+
+                tmp = splitHorizontal(set, work, true);
+                communication = getCommunicationSum(tmp);
+                solutions.add(new Solution(tmp, perm, communication));
+
+                tmp = splitVertical(set, work, false);
+                communication = getCommunicationSum(tmp);
+                solutions.add(new Solution(tmp, perm, communication));
+
+                tmp = splitVertical(set, work, true);
+                communication = getCommunicationSum(tmp);
+                solutions.add(new Solution(tmp, perm, communication));
+                                
+                // Set[] tmp = findBestSplitFourWays(set, work);
+                //int communication = getCommunicationSum(tmp);
+
+                //System.out.println("   RESULT: " + communication);
+                
+                //solutions.add(new Solution(tmp, perm, communication));
             }
         }
 
@@ -309,6 +332,7 @@ public class SearchSplit extends RoughlyRectangularSplit {
 
         Solution best = null;
         int bestCommunication = Integer.MAX_VALUE;
+        int maxCommunication = Integer.MAX_VALUE;
         
         for (Solution s : solutions) { 
             
@@ -326,36 +350,98 @@ public class SearchSplit extends RoughlyRectangularSplit {
 
                 int[] workPerPart = splitWork(s.solution[i].size(), subSlices[s.permutation[i]]);
 
+                System.out.println("Splitting SUB " + i + " " + Arrays.toString(workPerPart));
+                
                 findBestSplit(s.solution[i], workPerPart, solutions3);
 
                 int bestComm = Integer.MAX_VALUE;
+                int bestMax = Integer.MAX_VALUE;
                 Solution tmp = null;
                 
+                System.out.println("Splitting SUB gave " + solutions3.size() + " results");
+                
                 for (Solution s3 : solutions3) { 
-                    if (s3.communication < bestComm) { 
-                        bestComm = s3.communication;
-                        tmp = s3;
+                    
+                    int sum = 0;
+                    int max = 0;
+                    
+                    for (Set set : s3.solution) { 
+                        
+                        int comm = set.getCommunication();
+                        
+                        if (comm > max) { 
+                            max = comm;
+                        }
+                        
+                        sum += comm;
                     }
+
+                    if (sum < bestComm) { 
+                        bestComm = sum;
+                        bestMax = max;
+                        tmp = s3;
+                    } else if (sum == bestComm) { 
+                        if (max < bestMax) { 
+                            bestComm = sum;
+                            bestMax = max;
+                            tmp = s3;
+                        }
+                    }
+                    
+//                    if (s3.communication < bestComm) { 
+//                        bestComm = s3.communication;
+//                        tmp = s3;
+//                    }
                 }
+
+                System.out.println(" BEST SUB " + bestComm + " " + bestMax + " " + tmp.communication);
                 
                 solutions2.add(tmp);
+                
 //                for (int j = 0; j < tmp.solution.length; j++) {
 //                    result.add(tmp.solution[j]);
 //                }
             }
       
+            int min = Integer.MAX_VALUE; 
             int max = 0;
+            int sum = 0;
+            int count = 0;
             
-            for (Solution sub : solutions2) { 
-                if (sub.communication > max) {
-                    max = sub.communication;
+            for (Solution sub : solutions2) {
+                
+                for (Set set : sub.solution) { 
+                    
+                    int comm = set.getCommunication(); 
+                    
+                    if (comm > max) { 
+                        max = comm;
+                    }
+                    
+                    if (comm < min) { 
+                        min = comm;
+                    }
+                    
+                    sum += comm;
+                    count++;
                 }
             }
 
-            if (max < bestCommunication) { 
-                bestCommunication = max;
+            System.out.println("RESULT OF " + Arrays.toString(s.permutation) + " " + " " + 
+                    s.communication + " " + max + " " + sum + 
+                    " " + min + " " + count + " " + bestCommunication);
+
+            if (sum  < bestCommunication) { 
+                bestCommunication = sum;
+                maxCommunication = max;
                 best = s;
-            }        
+            } else if (sum == bestCommunication) { 
+                if (max < maxCommunication) { 
+                    bestCommunication = sum;
+                    maxCommunication = max;
+                    best = s;
+                }
+            }
         }
          
         System.out.println("\n\n****");

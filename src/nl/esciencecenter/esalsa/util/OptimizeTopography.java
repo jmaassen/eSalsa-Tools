@@ -15,8 +15,6 @@
  */
 
 package nl.esciencecenter.esalsa.util;
-import nl.esciencecenter.esalsa.loadbalancer.LoadBalancer;
-import nl.esciencecenter.esalsa.tools.DistributionViewer;
 
 public class OptimizeTopography {
 
@@ -82,48 +80,9 @@ public class OptimizeTopography {
 
         System.out.println("Original Grid dimensions " + grid.width + "x" + grid.height);
         System.out.println("New Grid dimensions " + grid.width + "x" + (grid.height + (grid.height - index)));
-
-        // Grid g = new Grid(grid, grid.height - index);
         
         Grid g = new Grid(grid, grid.height - index);
         
-        // Simply copy all blocks below index.
-//        for (int y = 0; y < index; y++) {
-//            for (int x = 0; x < grid.width; x++) {
-//                Block b = grid.get(x, y);
-//
-//                if (b != null) {
-//                    g.put(b);
-//                }
-//            }
-//        }
-
-        // Also copy all blocks above index and left of tripole.
-//        for (int y = index; y < grid.height; y++) {
-//            for (int x = 0; x < grid.width / 2; x++) {
-//                Block b = grid.get(x, y);
-//
-//                if (b != null) {
-//                    g.put(b);
-//                }
-//            }
-//        }
-
-        // Finally relocate all blocks above index and right of tripole. 
-//
-//        for (int y = index; y < grid.height; y++) {
-//            for (int x = grid.width / 2; x < grid.width; x++) {
-//                Block b = grid.get(x, y);
-//
-//                if (b != null) {
-//                    int newX = grid.width / 2 - (x - grid.width / 2) - 1;
-//                    int newY = grid.height + (grid.height - y - 1);
-//
-//                    g.put(new MetaBlock(new Coordinate(newX, newY), b));
-//                }
-//            }
-//        }
-
         for (int y = index; y < grid.height; y++) {
             for (int x = grid.width / 2; x < grid.width; x++) {
 
@@ -141,6 +100,7 @@ public class OptimizeTopography {
 
     public void optimize() throws Exception {
 
+        // This optimization only makes sense if a tripolo grid is used.  
         if (neighbours.boundaryV == Neighbours.TRIPOLE) {
             // Optimize tripole blocks up top. 
 
@@ -177,188 +137,6 @@ public class OptimizeTopography {
 
             optTop = createTopography(index);
             optGrid = createGrid(index);
-
-//            Grid g2 = new Grid(optTop, grid.blockWidth, grid.blockHeight);
-//
-//            // Make sure g and g2 are the same!
-//            if (optGrid.width != g2.width || optGrid.height != g2.height) {
-//                throw new Exception("Grid size mismatch!");
-//            }
-//
-//            for (int x = 0; x < optGrid.width; x++) {
-//                for (int y = 0; y < optGrid.height; y++) {
-//
-//                    Block b1 = optGrid.get(x, y);
-//                    Block b2 = g2.get(x, y);
-//
-//                    if (b1 == null && b2 != null) {
-//                        throw new Exception("Grid content mismatch at " + x + "x" + y);
-//                    }
-//
-//                    if (b1 != null && b2 == null) {
-//                        throw new Exception("Grid content mismatch at " + x + "x" + y);
-//                    }
-//                }
-//            }
-//
-//            System.out.println("Grid compare OK!");
-        //}
-
-        //            Grid g = new Grid(t, grid.blockWidth, grid.blockHeight);
-        //
-        //            int min = Integer.MAX_VALUE;
-        //            int minIndex = 0;
-        //
-        //            for (int x = 0; x < g.width; x++) {
-        //
-        //                int sum = 0;
-        //
-        //                for (int y = 0; y < g.height; y++) {
-        //
-        //                    if (g.get(x, y) != null) {
-        //                        sum++;
-        //                    }
-        //                }
-        //
-        //                if (sum < min) {
-        //                    min = sum;
-        //                    minIndex = x;
-        //                }
-        //
-        //                System.out.println("Active " + x + " = " + sum);
-        //            }
-
-        //            System.out.println("Minimum " + min + " at " + minIndex);
-        //
-        
-//                Grid g = optGrid;
-//                
-//                    TopographyCanvas tc = new TopographyCanvas(optTop, optGrid);
-//        
-//                    tc.addLayer("LINES");
-//                    tc.addLayer("BLOCKS");
-//        
-//                    JFrame frame = new JFrame("Topology");
-//                    frame.setSize(900, 700);
-//                    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-//                    frame.getContentPane().add(tc);
-//                    frame.setVisible(true);
-//        
-//                    Color c = new Color(128, 128, 128, 128);
-//        
-//                    tc.draw("LINES", new Line(new Coordinate(0, 0), new Coordinate(0, g.height)), c, 7.0f);
-//                    tc.draw("LINES", new Line(new Coordinate(0, 0), new Coordinate(g.width, 0)), c, 7.0f);
-//        
-//                    tc.draw("LINES", new Line(new Coordinate(0, g.height), new Coordinate(g.width, g.height)), c, 7.0f);
-//                    tc.draw("LINES", new Line(new Coordinate(g.width, 0), new Coordinate(g.width, g.height)), c, 7.0f);
-//        
-//                    for (int i = 1; i < g.width; i++) {
-//                        tc.draw("LINES", new Line(new Coordinate(i, 0), new Coordinate(i, g.height)), c, 7.0f);
-//                    }
-//        
-//                    for (int i = 1; i < g.height; i++) {
-//                        tc.draw("LINES", new Line(new Coordinate(0, i), new Coordinate(g.width, i)), c, 7.0f);
-//                    }
-//        
-//                    for (int y = 0; y < g.height; y++) {
-//                        for (int x = 0; x < g.width; x++) {
-//                            
-//                            Block b = g.get(x, y);
-//                            
-//                            if (b instanceof MetaBlock) { 
-//                                b = ((MetaBlock) b).getOriginal();
-//                            }
-//                            
-//                            if (b.isOcean()) {
-//                                tc.fillBlock("BLOCKS", x, y, Color.WHITE);
-//                            } else {
-//                                tc.fillBlock("BLOCKS", x, y, Color.BLACK);
-//                            }
-//                        }
-//                    }
-//        
-//        //            for (int y = 0; y < g.height; y++) {
-//        //                if (g.get(minIndex, y) != null) {
-//        //                    tc.fillBlock("BLOCKS", minIndex, y, Color.RED);
-//        //                }
-//        //            }
-//        
-//                    tc.repaint();
-//                }
-        //
-        //        if (neighbours.boundaryW == Neighbours.CYCLIC) {
-        //            // optimize edge blocks on east/west border. 
-        //
-        //        }
-        } 
-    }
-
-    public static void main(String[] args) {
-
-        try {
-
-            int topologyWidth = Integer.parseInt(args[1]);
-            int topologyHeight = Integer.parseInt(args[2]);
-
-            Topography t = new Topography(topologyWidth, topologyHeight, args[0]);
-
-            int blockWidth = Integer.parseInt(args[3]);
-            int blockHeight = Integer.parseInt(args[4]);
-
-            int gridWidth = topologyWidth / blockWidth;
-            int gridHeight = topologyHeight / blockHeight;
-            
-            Neighbours n = new Neighbours(t, gridWidth, gridHeight, blockWidth, blockHeight, 
-                    Neighbours.CYCLIC, Neighbours.TRIPOLE);
-            
-            Grid g = new Grid(gridWidth, gridHeight, blockWidth, blockHeight, n);
-            
-            OptimizeTopography top = new OptimizeTopography(t, g, n);
-            top.optimize();
-
-            Topography optT = top.getOptimizedTopography();
-            Grid optG = top.getOptimizedGrid();
-            
-            Layers l = new Layers();
-            LoadBalancer lb = new LoadBalancer(l, optT.width, optT.height, optG, blockWidth, blockHeight, 
-                    1, 4, 64, "search");
-
-            lb.split();
-            
-            int [] result = new int[gridWidth * gridHeight];
-            
-            for (Block b : optG) { 
-                
-                if (b.ocean) { 
-                    result[b.blockID-1] = b.getMark()+1;
-                } else {
-                    result[b.blockID-1] = 0;
-                }
-            }
-            
-            Distribution d = new Distribution(topologyWidth, topologyHeight, blockWidth, blockHeight, 
-                    1, 4, 64, 6, 7, gridWidth * gridHeight, result);
-            
-            
-            DistributionViewer sv1 = new DistributionViewer(d, t, g, true);
-            sv1.drawBlocks();
-            sv1.drawNodes();
-            sv1.drawCores();
-
-            
-            //
-//            DistributionViewer sv2 = new DistributionViewer(lb.getDistribution(g.width, g.height, t.width, t.height), t, g, true);
-//            sv2.drawBlocks();
-//            sv2.drawNodes();
-//            sv2.drawCores();
-            
-            //            DistributionViewer sv = new DistributionViewer(distribution, top.getOptimizedTopography(), top.getOptimizedGrid(), true);
-
-            d.write("test.dist");
-          
-        } catch (Exception e) {
-            System.err.println("Failed " + e.getMessage());
-            e.printStackTrace(System.err);
         }
     }
 }

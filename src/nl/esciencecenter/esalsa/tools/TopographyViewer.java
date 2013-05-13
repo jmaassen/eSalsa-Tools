@@ -114,8 +114,10 @@ public class TopographyViewer {
             
             Grid g = new Grid(gridWidth, gridHeight, blockWidth, blockHeight, n);
            
-            Color c = new Color(128, 128, 128, 128);
+            //Color c = new Color(128, 128, 128, 128);
 
+            Color c = Color.DARK_GRAY;
+            
             TopographyCanvas tc = new TopographyCanvas(t, g);
 
             tc.addLayer("BLOCKS");
@@ -142,7 +144,7 @@ public class TopographyViewer {
                         Block b = g.get(x, y);
                         
                         if (!b.ocean) {
-                            tc.fillBlock("BLOCKS", x, y, Color.BLACK);
+                            tc.fillBlock("BLOCKS", x, y, Color.GRAY);
                         } else {
                             tc.fillBlock("BLOCKS", x, y, Color.WHITE);
                         }

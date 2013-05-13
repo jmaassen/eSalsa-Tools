@@ -150,7 +150,7 @@ public class RoughlyRectangularSplit extends Split {
      */
     protected Set[] splitHorizontal(Set s, int[] targetWork, boolean reverse) {
 
-        final int direction = reverse ? 1 : 0;
+        final int direction = reverse ? 0 : 1;
 
         Set[] result = new Set[targetWork.length];
         ArrayList<Block> tmp = new ArrayList<Block>();
@@ -214,7 +214,7 @@ public class RoughlyRectangularSplit extends Split {
      */
     protected Set[] splitVertical(Set s, int[] targetWork, boolean reverse) {
 
-        final int direction = reverse ? 1 : 0;
+        final int direction = reverse ? 0 : 1;
 
         Set[] result = new Set[targetWork.length];
         ArrayList<Block> tmp = new ArrayList<Block>();
@@ -283,6 +283,8 @@ public class RoughlyRectangularSplit extends Split {
 
         if (set.getWidth() < set.getHeight()) {
 
+            System.out.println("HOR");
+            
             Set[] slices = splitHorizontal(set, workPerSlice, false);
 
             for (int i = 0; i < slices.length; i++) {
@@ -298,6 +300,8 @@ public class RoughlyRectangularSplit extends Split {
 
         } else {
 
+            System.out.println("VER");
+            
             Set[] slices = splitVertical(set, workPerSlice, false);
 
             for (int i = 0; i < slices.length; i++) {
@@ -311,6 +315,22 @@ public class RoughlyRectangularSplit extends Split {
                 }
             }
         }
+        
+        int max = 0;
+        int sum = 0;
+        
+        for (Set set : result) {
+            
+            int comm = set.getCommunication();
+            
+            if (comm > max) { 
+                max = comm;
+            }
+            
+            sum += comm;
+        }
+
+        System.out.println("Result " + sum + " " + max);
     }
 
     /**
@@ -373,7 +393,7 @@ public class RoughlyRectangularSplit extends Split {
      */
     @Override
     public void split(Collection<Set> result) {
-
+        
         if (logger.isDebugEnabled()) {
             logger.debug("Attempting to split set of size " + set.size() + " into " + parts + " parts.");
             logger.debug("Work per part: " + workPerPart);

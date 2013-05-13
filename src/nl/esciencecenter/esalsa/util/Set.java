@@ -233,6 +233,45 @@ public class Set implements Iterable<Block> {
         blocks = set.blocks.clone();
     }
 
+    public Line [] getEdges() { 
+        
+        ArrayList<Line> result = new ArrayList<Line>();
+        
+        for (Block b : blocks) {
+            getEdges(b, result);
+        }
+        
+        return result.toArray(new Line[result.size()]);
+    }
+    
+    /**
+     * Determines if a block may be on the edge of the set, that is, it has neighbors that are not part of the set.
+     * 
+     * @param b
+     *            the block to check
+     * @return if the block may be on the edge of the set.
+     */
+    private void getEdges(Block b, ArrayList<Line> result) {
+
+        int [][] neighbours = b.getNeighbours();
+
+        if (neighbours[0][1] > 0 && !contains(neighbours[0][1])) {
+            result.add(new Line(b.coordinate.offset(0, 1), b.coordinate.offset(1, 1)));
+        }
+
+        if (neighbours[1][0] > 0 && !contains(neighbours[1][0])) {
+            result.add(new Line(b.coordinate, b.coordinate.offset(0, 1)));
+        }
+
+        if (neighbours[1][2] > 0 && !contains(neighbours[1][2])) {
+            result.add(new Line(b.coordinate.offset(1, 0), b.coordinate.offset(1, 1)));
+        }
+        
+        if (b.coordinate.y == 0 || (neighbours[2][1] > 0 && !contains(neighbours[2][1]))) {
+            result.add(new Line(b.coordinate, b.coordinate.offset(1, 0)));
+        }
+    }
+
     /**
      * Determines if a block may be on the edge of the set, that is, it has neighbors that are not part of the set.
      * 

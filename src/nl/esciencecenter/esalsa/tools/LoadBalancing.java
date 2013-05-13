@@ -17,10 +17,12 @@
 package nl.esciencecenter.esalsa.tools;
 
 import nl.esciencecenter.esalsa.loadbalancer.LoadBalancer;
+import nl.esciencecenter.esalsa.util.Block;
 import nl.esciencecenter.esalsa.util.Distribution;
 import nl.esciencecenter.esalsa.util.Grid;
 import nl.esciencecenter.esalsa.util.Layers;
 import nl.esciencecenter.esalsa.util.Neighbours;
+import nl.esciencecenter.esalsa.util.OptimizeTopography;
 import nl.esciencecenter.esalsa.util.Topography;
 
 /**
@@ -57,8 +59,17 @@ public class LoadBalancing {
     /** The number of cores per node as set by user */
     private static int coresPerNode = -1;
 
+    /** The boundary wrapping method in the X direction (CYCLIC or CLOSED). */
+    private static int boundaryWrapX = Neighbours.CYCLIC;
+
+    /** The boundary wrapping method in the Y direction (TRIPOLE, CYCLIC or CLOSED).*/
+    private static int boundaryWrapY = Neighbours.TRIPOLE;
+
     /** Should we show the GUI ? */
     private static boolean showGUI = false;
+
+    /** Should we optimize the topology before creating a distribution ? */
+    private static boolean optimizeTopolography = false;
 
     /** Statistics to print */
     private static String statistics = null;
@@ -73,8 +84,8 @@ public class LoadBalancing {
     private static String outputImage = null;
 
     /** Name of the split methods to use */
-    private static String splitMethod = "roughlyrect";
-
+    private static String splitMethod = "search";
+    
     /**
      * Print the usage on the console.
      */
@@ -87,17 +98,22 @@ public class LoadBalancing {
                 + "   --grid WIDTH HEIGHT        dimensions of the topography file grid (WIDTHxHEIGHT).\n"
                 + "   --blocksize WIDTH HEIGHT   dimensions of the blocks to use (WIDTHxHEIGHT).\n"
                 + "   --nodes NODES              number of nodes for which the distribution must be calculated.\n"
-                + "   --cores CORES              number of cores in each node.\n" + "\n" + "Optional arguments:\n"
+                + "   --cores CORES              number of cores in each node.\n"
+                + "\nOptional arguments:\n" 
                 + "   --clusters CLUSTERS        number of clusters to calculate ditribution for (default is 1).\n"
                 + "   --output FILE              store the resulting distribution in FILE.\n"
                 + "   --image FILE               store an image of the resulting distribution in FILE.\n"
-                + "   --statistics LAYER         print statistics on the resulting distribution on layer LAYER. Valid"
+                + "   --statistics LAYER         print statistics on the resulting distribution on layer LAYER. Valid"                
                 + " value for LAYER are CORES, NODES, CLUSTERS, ALL.\n"
                 + "   --method METHOD            method used to distribute the blocks. Valid values for METHOD are"
-                + " SIMPLE, ROUGHLYRECT, and SEARCH. Default is ROUGHLYRECT.\n"
+                + " SEARCH (default), SIMPLE and ROUGHLYRECT.\n"
+                + "   --optimizeTopography       optimize topography before determining distribution.\n"
+                + "   --boundaryWrapX            wrapping method used in X direction. Valid values are CLOSED (default) and "
+                + "CYCLIC.\n" 
+                + "   --boundaryWrapY            wrapping method used in Y direction. Valid values are TRIPOLE (default), CLOSED"
+                + " and CYCLIC.\n"
                 + "   --showgui                  show a graphical interface that allows the user to explore the distribution.\n"
                 + "   --help                     show this help.");
-
         System.exit(0);
     }
 
@@ -113,19 +129,57 @@ public class LoadBalancing {
             Topography topography = new Topography(topographyWidth, topographyHeight, topographyFile);
             
             Neighbours neighbours = new Neighbours(topography, gridWidth, gridHeigth, blockWidth, blockHeight, 
-                    Neighbours.CYCLIC, Neighbours.TRIPOLE);
+                    boundaryWrapX, boundaryWrapY);
             
             Grid grid = new Grid(gridWidth, gridHeigth, blockWidth, blockHeight, neighbours);
             
-            Layers layers = new Layers();
-
-            LoadBalancer lb = new LoadBalancer(layers, topography.width, topography.height, grid, blockWidth, blockHeight, 
-                    clusters, nodesPerCluster, coresPerNode, splitMethod);
-
-            // FIXME!!!!
-            lb.split();
-            Distribution distribution = lb.getDistribution();
+            Distribution distribution = null;
+            LoadBalancer lb = null;
             
+            if (optimizeTopolography) { 
+
+                OptimizeTopography top = new OptimizeTopography(topography, grid, neighbours);
+                top.optimize();
+
+                Topography optT = top.getOptimizedTopography();
+                Grid optG = top.getOptimizedGrid();
+                
+                Layers l = new Layers();
+                lb = new LoadBalancer(l, optT.width, optT.height, optG, 
+                        blockWidth, blockHeight, 
+                        clusters, nodesPerCluster, coresPerNode, splitMethod);
+                
+                lb.split();
+                
+                int [] result = new int[gridWidth * gridHeigth];
+                
+                for (Block b : optG) { 
+                    
+                    if (b.ocean) { 
+                        result[b.blockID-1] = b.getMark()+1;
+                    } else {
+                        result[b.blockID-1] = 0;
+                    }
+                }
+                
+                Distribution tmpD = lb.getDistribution();
+                
+                distribution = new Distribution(topographyWidth, topographyHeight, 
+                        blockWidth, blockHeight, clusters, nodesPerCluster, coresPerNode, 
+                        tmpD.minBlocksPerCore, tmpD.maxBlocksPerCore, 
+                        gridWidth * gridHeigth, result);
+
+            } else { 
+                
+                Layers layers = new Layers();
+
+                lb = new LoadBalancer(layers, topography.width, topography.height, grid, blockWidth, blockHeight, 
+                        clusters, nodesPerCluster, coresPerNode, splitMethod);
+                
+                lb.split();
+                distribution = lb.getDistribution();
+            }
+
             if (showGUI || outputImage != null) {
 
                 DistributionViewer sv = new DistributionViewer(distribution, topography, grid, showGUI);
@@ -228,7 +282,7 @@ public class LoadBalancing {
                 coresPerNode = Utils.parseInt("--cores", args[index + 1], 1);
                 index += 2;
                 coresSet = true;
-
+                
             } else if (args[index].equals("--output")) {
                 Utils.checkOptions("--output", 1, index, args.length);
                 outputDistribution = args[index + 1];
@@ -239,6 +293,10 @@ public class LoadBalancing {
                 outputImage = args[index + 1];
                 index += 2;
 
+            } else if (args[index].equals("--optimizeTopography")) {
+                optimizeTopolography = true;
+                index++;
+                
             } else if (args[index].equals("--showGUI")) {
                 showGUI = true;
                 index++;
@@ -256,6 +314,16 @@ public class LoadBalancing {
                 splitMethod = args[index + 1];
                 index += 2;
 
+            } else if (args[index].equals("--boundaryWrapX")) {
+                Utils.checkOptions("--boundaryWrapX", 1, index, args.length);
+                boundaryWrapX = Neighbours.parseBoundaryX(args[index + 1]); 
+                index += 2;
+            
+            } else if (args[index].equals("--boundaryWrapY")) {
+                Utils.checkOptions("--boundaryWrapY", 1, index, args.length);
+                boundaryWrapY = Neighbours.parseBoundaryY(args[index + 1]);
+                index += 2;
+                
             } else {
                 Utils.fatal("Unknown option: " + args[index]);
             }
@@ -277,6 +345,14 @@ public class LoadBalancing {
             Utils.fatal("Please specify core per node using \"--cores CORES\"");
         }
 
+        if (boundaryWrapX == -1) { 
+            Utils.fatal("Invalid value for boundaryWrapX");
+        }
+
+        if (boundaryWrapY == -1) { 
+            Utils.fatal("Invalid value for boundaryWrapY");
+        }
+        
         if (blockWidth > topographyWidth) {
             Utils.fatal("Block width cannot be larger that grid width");
         }
@@ -296,7 +372,7 @@ public class LoadBalancing {
         if (!showGUI && outputDistribution == null && outputImage == null && statistics == null) {
             System.out.println("WARNING: This application will not produce any output, since none of the outputs is selected!");
         }
-
+        
         run();
     }
 }

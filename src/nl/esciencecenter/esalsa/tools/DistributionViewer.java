@@ -21,6 +21,7 @@ import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 
@@ -59,7 +60,7 @@ public class DistributionViewer {
     private static final Logger logger = LoggerFactory.getLogger(DistributionViewer.class);
 
     /** The line color used for clusters */
-    private static final Color LINE_COLOR_CLUSTER = new Color(255, 255, 0, 200);
+    private static final Color LINE_COLOR_CLUSTER = new Color(0, 0, 255, 255);
 
     /** The color used for cluster ocean halos */
     private static final Color HALO_COLOR_CLUSTER = new Color(128, 64, 0, 96);
@@ -71,7 +72,7 @@ public class DistributionViewer {
     private static final float LINE_WIDTH_CLUSTER = 15f;
 
     /** The line color used for nodes */
-    private static final Color LINE_COLOR_NODE = new Color(200, 128, 0, 160);
+    private static final Color LINE_COLOR_NODE = new Color(255, 0, 0, 255);
 
     /** The color used for node ocean halos */
     private static final Color HALO_COLOR_NODE = new Color(160, 80, 0, 160);
@@ -80,10 +81,10 @@ public class DistributionViewer {
     private static final Color LAND_COLOR_NODE = new Color(0, 80, 160, 80);
 
     /** The line width used for nodes */
-    private static final float LINE_WIDTH_NODE = 11f;
+    private static final float LINE_WIDTH_NODE = 13f;
 
     /** The line color used for cores */
-    private static final Color LINE_COLOR_CORE = new Color(225, 0, 0, 160);
+    private static final Color LINE_COLOR_CORE = new Color(0, 0, 0, 255);
 
     /** The color used for core ocean halos */
     private static final Color HALO_COLOR_CORE = new Color(255, 128, 0, 192);
@@ -92,10 +93,10 @@ public class DistributionViewer {
     private static final Color LAND_COLOR_CORE = new Color(0, 128, 255, 128);
 
     /** The line width used for cores */
-    private static final float LINE_WIDTH_CORE = 5f;
+    private static final float LINE_WIDTH_CORE = 13f;
 
     /** The line color used for blocks */
-    private static final Color LINE_COLOR_BLOCK = new Color(128, 128, 128, 50);
+    private static final Color LINE_COLOR_BLOCK = Color.GRAY; //new Color(200, 200, 200, 255);
 
     /** The color used for block ocean halos */
     private static final Color HALO_COLOR_BLOCK = new Color(255, 128, 0, 255);
@@ -104,7 +105,7 @@ public class DistributionViewer {
     private static final Color LAND_COLOR_BLOCK = new Color(0, 128, 255, 255);
 
     /** The line width used for blocks */
-    private static final float LINE_WIDTH_BLOCK = 4f;
+    private static final float LINE_WIDTH_BLOCK = 5f;
 
     /** The color used for selected blocks */
     private static final Color CENTER = new Color(255, 0, 0, 210);
@@ -177,9 +178,9 @@ public class DistributionViewer {
 
         view = new TopographyCanvas(topography, grid);
         view.addLayer("BLOCKS");
-        view.addLayer("CLUSTERS");
-        view.addLayer("NODES");
         view.addLayer("CORES");
+        view.addLayer("NODES");
+        view.addLayer("CLUSTERS");
         view.addLayer("FILL");
 
         if (showGUI) {
@@ -190,6 +191,24 @@ public class DistributionViewer {
             frame.setVisible(true);
             view.addMouseListener(new MyListener());
         }
+        
+        boolean showWork = true;
+        
+        if (showWork) {
+            for (int y = 0; y < grid.height; y++) {
+                for (int x = 0; x < grid.width; x++) {
+                    
+                    Block b = grid.get(x, y);
+                    
+                    if (!b.ocean) {
+                        view.fillBlock("BLOCKS", x, y, Color.GRAY);
+                    } else {
+                        view.fillBlock("BLOCKS", x, y, Color.WHITE);
+                    }
+                }
+            }
+        }
+
     }
 
     public void repaint() {
@@ -491,6 +510,19 @@ public class DistributionViewer {
         }
     }
 
+    private void drawLines(String layer, Line [] lines, Color color, float lineWidth) throws Exception {
+
+        if (view == null) {
+            return;
+        }
+
+        // We draw each line that has only been added to the map once. 
+        for (Line l : lines) {
+            view.draw(layer, l, color, lineWidth);
+        }
+    }
+
+    
     /**
      * Draw the edges of all sets in the specified layer.
      * 
@@ -513,11 +545,13 @@ public class DistributionViewer {
 
             Set s = l.get(i);
 
-            HashMap<Line, Integer> map = new HashMap<Line, Integer>();
+            //HashMap<Line, Integer> map = new HashMap<Line, Integer>();
 
-            collectLines(s, map);
+            //collectLines(s, map);
 
-            drawLines(l.name, map, color, lineWidth);
+            // drawLines(l.name, map, color, lineWidth);
+            
+            drawLines(l.name, s.getEdges(), color, lineWidth);
         }
 
         view.repaint();
@@ -546,6 +580,10 @@ public class DistributionViewer {
      */
     public void drawClusters() throws Exception {
 
+        if (distribution.clusters == 1) { 
+            return;
+        }
+        
         if (logger.isDebugEnabled()) {
             logger.debug("Showing layer CLUSTERS");
         }
@@ -561,6 +599,10 @@ public class DistributionViewer {
      */
     public void drawNodes() throws Exception {
 
+        if (distribution.nodesPerCluster == 1) { 
+            return;
+        }
+        
         if (logger.isDebugEnabled()) {
             logger.debug("Showing layer NODES");
         }
@@ -592,13 +634,12 @@ public class DistributionViewer {
     public void drawAll() throws Exception {
 
         drawBlocks();
+        drawCores();
+        drawNodes();
 
         if (distribution.clusters > 1) {
             drawClusters();
         }
-
-        drawNodes();
-        drawCores();
     }
 
     /**
@@ -649,6 +690,8 @@ public class DistributionViewer {
 
             dv.drawAll();
 
+            dv.save("test.png");
+            
         } catch (Exception e) {
             Utils.fatal("Failed to run DistributionViewer ", e);
         }
